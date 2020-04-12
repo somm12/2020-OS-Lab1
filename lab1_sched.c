@@ -8,8 +8,8 @@
 *
 *   lab1_sched.c :
 *       - Lab1 source file.
-*       - Must contains scueduler algorithm function'definition.
-*       **********************************modified********************************8
+*       - Must contains scueduler algorithm function definition.
+*
 */
 
 #include <aio.h>
