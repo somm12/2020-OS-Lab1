@@ -1,5 +1,5 @@
 /*
-*	DKU Operating System Lab
+*	DKU 2020 Operating System Lab
 *	    Lab1 (Scheduler Algorithm Simulator)
 *	    Studend id : 32182490
 *	    Student name : An Somin
