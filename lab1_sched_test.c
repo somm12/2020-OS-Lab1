@@ -1,8 +1,8 @@
 /*
 *	DKU Operating System Lab
 *	    Lab1 (Scheduler Algorithm Simulator)
-*	    Student id : 
-*	    Student name : 
+*	    Student id : 32182490 
+*	    Student name : Ansomin
 *
 *   lab1_sched.c :
 *       - Lab1 source file.
