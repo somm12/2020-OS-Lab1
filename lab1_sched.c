@@ -30,8 +30,8 @@
 
 #include "lab1_sched_types.h"
 
-/*
- * you need to implement FCFS, RR, SPN, SRT, HRRN, MLFQ scheduler. 
+/*i
+ * you need to implement FIFO, RR, MLFQ scheduler and bonus to do stride scheduler
  */
 
 
