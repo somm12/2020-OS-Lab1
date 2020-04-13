@@ -1,13 +1,12 @@
 /*
 *	DKU 2020 Operating System Lab
 *	    Lab1 (Scheduler Algorithm Simulator)
-*	    Student id : 32182490
 *	    Studend id : 32182490
 *	    Student name : An Somin
 *	    Student id : 32182110
 *	    Student name : Seo Museong
 *
-*	lab1_sched.c:
+*	lab1_sched.c :
 *       - Lab1 source file.
 *       - Must contains scueduler algorithm function definition.
 *
