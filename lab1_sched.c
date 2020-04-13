@@ -1,12 +1,12 @@
 /*
 *	DKU 2020 Operating System Lab
 *	    Lab1 (Scheduler Algorithm Simulator)
-*	    Studend id : 32182490
-*		Student name : An Somin
-*		Student id : 32182110
+*	    Student id : 32182490
+*	    Student name : An Somin
+*	    Student id : 32182110
 *	    Student name : Seo Museong
 *
-*   lab1_sched.c :
+*   lab1_sched.c:
 *       - Lab1 source file.
 *       - Must contains scueduler algorithm function'definition.
 *
@@ -31,7 +31,7 @@
 #include "lab1_sched_types.h"
 
 /*
- * you need to implement FCFS, RR, SPN, SRT, HRRN, MLFQ scheduler. 
+ * you need to implement FIFO, RR, MLFQ scheduler & bonus for stride scheduler
  */
 
 
