@@ -7,7 +7,7 @@
 *	    Student id : 32182110
 *	    Student name : Seo Museong
 *
-*	lab1_sched.c :
+*	lab1_sched.c:
 *       - Lab1 source file.
 *       - Must contains scueduler algorithm function definition.
 *
