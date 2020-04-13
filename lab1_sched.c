@@ -31,7 +31,7 @@
 #include "lab1_sched_types.h"
 
 /*i
- * you need to implement FIFO, RR, MLFQ scheduler & bonus to do stride scheduler
+ * you need to implement FIFO, RR, MLFQ scheduler and bonus to do stride scheduler
  */
 
 
