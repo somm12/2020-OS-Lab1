@@ -42,7 +42,7 @@ void FIFO(process arr[],int size) {
 
       }
       for (int k = 0; k < arr[i].servicetime; k++) {
-         printf("□  ");
+         printf("□□ ");
 
       }
       printf("\n");
