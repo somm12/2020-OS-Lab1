@@ -47,10 +47,7 @@ void fifo(process arr[],  Queue * pq, int total_time){
 		arr[sizeof(arr) / sizeof(process)] = Dequeue(&output);// make structure array which is sorted for output
 		//(suit format:struct array) to graph funtion input)	
 	}
-<<<<<<< HEAD
-	graph(arr,sizeof(arr) / sizeof(process));//call funtion to draw the FIFO graph
-=======
+
 	graph(arr,sizeof(arr) / sizeof(process));////call funtion to draw the FIFO graph
 
->>>>>>> 4ef7505fe9af0f57b2c83fee1c4d96f1ab7326cb
 }
