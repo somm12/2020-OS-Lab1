@@ -9,12 +9,14 @@ typedef struct{
 void fifo(process arr[],  Queue * pq, int total_time){
 	Queue* output;
 	int k = 0;
-	process running[];/// declaration of structure array
-
+	process running[1];/// declaration of structure array
+	process arr[1]= {{-1,-1}};// this is for the case the first process's arrive time is not zero. because of Qpeek.
+	Enqueue(&pq, arr[0]);
 	for (int i = 0 ; i < total_time ; i++){		// i = time (x axis) 
 
 		for (int j = 0 ; j < sizeof(arr) / sizeof(process) ; j++){	// j = number of process
 			if (arr[j].arrive_time == i) {		// if there is a process has same arrive time with i
+				if(i == 0){Dequeue(&pq);}// this is the case for the first procees's arrive time is zero. because of Dequeue.when the queue is empty. error
 				Enqueue(&pq, arr[j]);		// enqueue the process
 			}
 		}
@@ -42,7 +44,8 @@ void fifo(process arr[],  Queue * pq, int total_time){
 	}
 
 	while(!QIsEmpty(&output)){
-		arr[sizeof(arr) / sizeof(process)] = Dequeue(&output);// make structure array which is sorted for output (suit format:struct array) to graph funtion input)	
+		arr[sizeof(arr) / sizeof(process)] = Dequeue(&output);// make structure array which is sorted for output
+		//(suit format:struct array) to graph funtion input)	
 	}
-	graph(arr,sizeof(arr) / sizeof(process));
+	graph(arr,sizeof(arr) / sizeof(process));//call funtion to draw the FIFO graph
 }
