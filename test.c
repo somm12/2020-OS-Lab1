@@ -73,8 +73,6 @@ void bubble_sort(process arr[], int count)    // 매개변수로 정렬할 배�
          {
             if (arr[j].arrivetime > arr[j + 1].arrivetime)          // 현재 요소의 값과 다음 요소의 값을 비교하여
             {                                 // 큰 값을
-               arri_t = arr[j].arrivetime;
-               arr[j].arrivetime = arr[j + 1].arrivetime;
                arr[j + 1].arrivetime = arri_t;
 
                serv_t = arr[j].servicetime;
