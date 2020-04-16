@@ -80,7 +80,7 @@ Data Dequeue(Queue * pq)
    delNode = pq->front;
    retData = delNode->data;
    pq->front = pq->front->next;
-
+}
 
 /************************************************ FIFO Implementation  **********************************************/
 
@@ -89,7 +89,7 @@ void fifo(process arr[],  Queue * pq, int total_time){
 	int k = 0;
 	process running[1] = {{-1,-1}};				// declaration of structure array
 	process init[1]= {{-1,-1}};					// this is for the case the first process's arrive time is not zero. because of Qpeek.
-	Enqueue(&pq, init[0]);
+	Enqueue(pq, init[0]);
 	for (int i = 0 ; i < total_time ; i++){		// i = time (x axis) 
 
 		for (int j = 0 ; j < sizeof(arr) / sizeof(process) ; j++){	// j = number of process
