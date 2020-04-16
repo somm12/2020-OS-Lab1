@@ -88,6 +88,55 @@ Data QPeek(Queue * pq)
 {
    return pq->front->data;
 }
+/************************************************ Graph Implementation *********************************************/
+
+void graph(process arr[],int size) {
+   int sum = 0;
+
+   char temp[5] = { 'A','B','C','D','E' };
+   for (int j = -1; j <= 20; j++){ // 20 = sum of the service time
+      if (j >  0){
+	     if (j > 9){
+		    printf("%d ", j);
+		 }
+		 else {
+	        printf(" %d ", j);
+		 }
+	  }
+	  else{
+         printf("  ");
+      }
+   }
+
+   printf("\n");
+   for (int i = 0; i < size; i++) {
+      if (i < 1)
+      {
+         printf("%c", temp[i]);
+         printf(" | ");
+
+      }
+      for (int k = 0; k < arr[i].service_time; k++) {
+         printf("■■ ");
+
+      }
+      printf("\n");
+      if (i < 4)
+      {
+         printf("%c", temp[i + 1]);
+         printf(" | ");
+      }
+      sum = sum + arr[i].service_time;
+      for (int j = 0; j < sum; j++) {
+         printf("   ");
+
+      }
+   }
+   printf("\n");
+
+   return;
+}
+
 
 /************************************************ FIFO Implementation  **********************************************/
 
@@ -135,4 +184,5 @@ void fifo(process arr[],  Queue * pq, int total_time, int process_num){
 		printf("arr[%d].arrive_time = %d\n",i, arr[i].arrive_time);
 		printf("arr[%d].service_time = %d\n",i, arr[i].service_time);
 	}
+	graph(arr, process_num);
 }
