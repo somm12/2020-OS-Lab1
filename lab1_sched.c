@@ -90,11 +90,11 @@ Data QPeek(Queue * pq)
 }
 /************************************************ Graph Implementation *********************************************/
 
-void graph(process arr[],int size) {
+void graph(process arr[], int size, int time) {
    int sum = 0;
 
    char temp[5] = { 'A','B','C','D','E' };
-   for (int j = -1; j <= 20; j++){ // 20 = sum of the service time
+   for (int j = -1; j <= time; j++){ // 20 = sum of the service time
       if (j >  0){
 	     if (j > 9){
 		    printf("%d ", j);
@@ -145,7 +145,8 @@ void fifo(process arr[],  Queue * pq, int total_time, int process_num){
     Queue output;
     QueueInit(&output);
 	int k = 0;
-    process running[1] = {{-2,-2}};             // declaration of structure array
+    int total_service_time = 0;
+	process running[1] = {{-2,-2}};             // declaration of structure array
     process init[1]= {{-1,-1}};                 // this is for the case the first process's arrive time is not zero. because of Qpeek.
     Enqueue(pq, init[0]);
     for (int i = 0 ; i < total_time ; i++){     // i = time (x axis) 
@@ -183,6 +184,7 @@ void fifo(process arr[],  Queue * pq, int total_time, int process_num){
 	for (int i=0 ; i < process_num ; i++){
 		printf("arr[%d].arrive_time = %d\n",i, arr[i].arrive_time);
 		printf("arr[%d].service_time = %d\n",i, arr[i].service_time);
+		total_service_time += arr[i].service_time;
 	}
-	graph(arr, process_num);
+	graph(arr, process_num, total_service_time);
 }
