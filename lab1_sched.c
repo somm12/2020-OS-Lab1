@@ -106,7 +106,7 @@ void fifo(process arr[],  Queue * pq, int total_time){
                 Enqueue(pq, arr[j]);                        // enqueue the process
             }
         }
-        if(k == 00 && QPeek(pq).arrive_time == i){
+        if(k == 0 && QPeek(pq).arrive_time == i){
             running[0].arrive_time = -1;                            // when the first fast process begin to start, assign -1 value to start work.
             k = 1;
         }
@@ -132,6 +132,6 @@ if (running[0].arrive_time == -1){                          // if none of proces
         arr[i] = Dequeue(&output);// make structure array which is sorted for output
     }
 for (int i=0 ; i < process_num ; i++){
-    print("arr[%d].arrive_time = %d",i, arr[i].arrive_time);
-    print("arr[%d].service_time = %d",i, arr[i].service_time);
+    printf("arr[%d].arrive_time = %d",i, arr[i].arrive_time);
+    printf("arr[%d].service_time = %d",i, arr[i].service_time);
 }

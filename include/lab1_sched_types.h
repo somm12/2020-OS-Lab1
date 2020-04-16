@@ -19,13 +19,12 @@
  */
 
 typedef struct process{
-	//process_name string
-	int arrive_time;
-	int service_time;
+    //process_name string
+    int arrive_time;
+    int service_time;
 } __attribute__ ((packed)) process;
 
-typedef process data;
-
+typedef process Data;
 
 /********************************* Queue Header *************************************/
 
@@ -57,7 +56,5 @@ Data QPeek(Queue * pq);
 
 
 void fifo(process arr[],  Queue * pq, int total_time);
-
-
 
 #endif /* LAB1_HEADER_H*/
