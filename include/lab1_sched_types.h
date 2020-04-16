@@ -20,6 +20,7 @@ typedef struct process{
     //process_name string
     int arrive_time;
     int service_time;
+	char process_name;
 } __attribute__ ((packed)) process;
 
 typedef process Data;
@@ -51,9 +52,9 @@ Data Dequeue(Queue * pq);
 Data QPeek(Queue * pq);
 
 /****************************function for print FIFO*************************************/
-
+void fifo_workload_table(int size, process arr[]);
 void fifo(process arr[], Queue * pq, int total_time, int size);
-void graph(process arr[], int size);
+void graph(process arr[], int size, int total_service_time);
 #endif /* LAB1_HEADER_H*/
 
 
