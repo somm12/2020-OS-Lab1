@@ -28,7 +28,7 @@
 #include <pthread.h>
 #include <asm/unistd.h>
 
-#include "lab1_sched_types.h"
+#include "include/lab1_sched_types.h"
 
 /*
  * you need to implement scheduler simlator test code.
@@ -44,14 +44,14 @@ int main(int argc, char *argv[]){
 
 	int process_num = sizeof(arr)/sizeof(process);
 
-	int total_time;
+	int total_time = 0;
 
 	for (int i=0 ; i<process_num ; i++){
 		total_time += arr[i].arrive_time;
 		total_time += arr[i].service_time;
 	}
 
-	fifo(arr, &pq, process_num);
+	fifo(arr, &pq, total_time, process_num);
 
 	return 0;
 }

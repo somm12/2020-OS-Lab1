@@ -92,7 +92,7 @@ Data QPeek(Queue * pq)
 /************************************************ FIFO Implementation  **********************************************/
 
 
-void fifo(process arr[],  Queue * pq, int total_time){
+void fifo(process arr[],  Queue * pq, int total_time, int process_num){
     Queue output;
     QueueInit(&output);
 	int k = 0;
@@ -132,7 +132,7 @@ void fifo(process arr[],  Queue * pq, int total_time){
         arr[i] = Dequeue(&output);// make structure array which is sorted for output
     }
 	for (int i=0 ; i < process_num ; i++){
-		printf("arr[%d].arrive_time = %d",i, arr[i].arrive_time);
-		printf("arr[%d].service_time = %d",i, arr[i].service_time);
+		printf("arr[%d].arrive_time = %d\n",i, arr[i].arrive_time);
+		printf("arr[%d].service_time = %d\n",i, arr[i].service_time);
 	}
 }

@@ -55,6 +55,6 @@ Data QPeek(Queue * pq);
 /**************************************************************************/
 
 
-void fifo(process arr[], Queue * pq, int total_time);
+void fifo(process arr[], Queue * pq, int total_time, int process_num);
 
 #endif /* LAB1_HEADER_H*/
