@@ -94,9 +94,9 @@ void graph(process arr[], int size, int time) {
    int sum = 0;
 
    char temp[5] = { 'A','B','C','D','E' };
-   for (int j = 0; j <= time; j++){ // 20 = sum of the service time
+   for (int j = -1; j <= time; j++){ // 20 = sum of the service time
       if (j >  0){
-	     if (j > 10){
+	     if (j > 9){
 			printf("%d ", j);
 		 }
 		 else {
@@ -104,7 +104,7 @@ void graph(process arr[], int size, int time) {
 		 }
 	  }
 	  else{
-         printf("   ");
+         printf("  ");
       }
    }
 
@@ -113,7 +113,7 @@ void graph(process arr[], int size, int time) {
       if (i < 1)
       {
          printf("%c", temp[i]);
-         printf("|");
+         printf(" | ");
 
       }
       for (int k = 0; k < arr[i].service_time; k++) {
@@ -124,7 +124,7 @@ void graph(process arr[], int size, int time) {
       if (i < 4)
       {
          printf("%c", temp[i + 1]);
-         printf("|");
+         printf(" | ");
       }
       sum = sum + arr[i].service_time;
       for (int j = 0; j < sum; j++) {
@@ -140,69 +140,52 @@ void graph(process arr[], int size, int time) {
 
 /************************************************ FIFO Implementation  **********************************************/
 
-void fifo(process arr[], Queue* pq, int total_time, int size) {
-	Queue output;
-	QueueInit(&output);
-	int total_service_time = 0;
+
+void fifo(process arr[],  Queue * pq, int total_time, int process_num){
+    Queue output;
+    QueueInit(&output);
 	int k = 0;
-	process running[1] = { { -2,-2 } };/// declaration of structure array
-	process init[1] = { { -1,-1 } };// this is for the case the first process's arrive time is not zero. because of Qpeek.
-	Enqueue(pq, init[0]);
-	for (int i = 0; i < total_time; i++) {		// i = time (x axis) 
+    int total_service_time = 0;
+	process running[1] = {{-2,-2}};             // declaration of structure array
+    process init[1]= {{-1,-1}};                 // this is for the case the first process's arrive time is not zero. because of Qpeek.
+    Enqueue(pq, init[0]);
+    for (int i = 0 ; i < total_time ; i++){     // i = time (x axis) 
 
-		for (int j = 0; j < size; j++) {	// j = number of process
-			if (arr[j].arrive_time == i) {		// if there is a process has same arrive time with i
-				if (i == 0) {
-				
-					Dequeue(pq);
-					
-				}// this is the case for the first procees's arrive time is zero. because of Dequeue.when the queue is empty. error
-				Enqueue(pq, arr[j]);
-			
-				// enqueue the process
-				
+        for (int j = 0 ; j < process_num ; j++){    // j = number of process
+            if (arr[j].arrive_time == i) {                  // if there is a process has same arrive time with i
+                if(i == 0){Dequeue(pq);}                    // this is the case for the first procees's arrive time is zero. because of Dequeue.when the queue is empty. error
+                Enqueue(pq, arr[j]);                        // enqueue the process
+            }
+        }
+        if(k == 0){
+			if (QPeek(pq).arrive_time == i){
+				running[0].arrive_time = -1;                            // when the first fast process begin to start, assign -1 value to start work.
+				k = 1;
 			}
+        }
+		if (running[0].arrive_time == -1){                          // if none of process is running
+            running[0] = QPeek(pq);                             // put process into running struct
+			Dequeue(pq);                                            // pull out the process
+			printf("i : %d, arrive_time : %d, service_time : %d\n", i, running[0].arrive_time, running[0].service_time);
+			Enqueue(&output, running[0]);						// enqueue the process into queue
 		}
-		if(k==0){
-			if (QPeek(pq).arrive_time == i) {
-			running[0].arrive_time = -1;// when the first fast process begin to start, assign -1 value to start work.
-			k = 1;
-		}
-	}
-	
-		if (running[0].arrive_time == -1) {		// if none of process is running
-			running[0] = QPeek(pq);	
-		    // put process into running struct
-			Dequeue(pq);
-			// pull out the process
-		
-		// if some process is running
-		// if it is the first time the process has runned
-			Enqueue(&output, running[0]);
-			// enqueue the process into queue
-		}
-			running[0].service_time -= 1;		// decreases the remain service time
-			if (running[0].service_time == 0) {	// if service time becomes zero
-				running[0].arrive_time = -1;	// stop running and initialize it
-			}
-		//if some process is running
-		
+		        
+        running[0].service_time -= 1;                           // decreases the remain service time
+        if (running[0].service_time == 0) {                     // if service time becomes zero
+            running[0].arrive_time == -1;                       // stop running and initialize it
+        }
 
-		if (QIsEmpty(pq) == 1 && running[0].service_time == 0)break;
+        if(QIsEmpty(pq) && running[0].service_time == 0) break;
 
-	}
-	int i = 0;
-
-	while (QIsEmpty(&output)==0) {
-		arr[i] = Dequeue(&output);// make structure array which is sorted for output
-		i++;//(suit format:struct array) to graph funtion input)	
-	}
-	for (int i = 0; i < size; i++) {
-		printf("%d %d\n", arr[i].arrive_time, arr[i].service_time);
+    }
+    int i = 0;
+    while(!QIsEmpty(&output)){
+        arr[i] = Dequeue(&output);// make structure array which is sorted for output
+    }
+	for (int i=0 ; i < process_num ; i++){
+		printf("arr[%d].arrive_time = %d\n",i, arr[i].arrive_time);
+		printf("arr[%d].service_time = %d\n",i, arr[i].service_time);
 		total_service_time += arr[i].service_time;
 	}
-
-	
-	graph(arr, size, total_service_time);////call funtion to draw the FIFO graph
-
+	graph(arr, process_num, total_service_time);
 }
