@@ -18,8 +18,12 @@
  * You need to Declare functions in  here
  */
 
+typedef struct{
+	//process_name string
+	int arrive_time;
+	int service_time;
+}process
+
+typedef process data;
 
 #endif /* LAB1_HEADER_H*/
-
-
-
