@@ -28,8 +28,6 @@
 #include <pthread.h>
 #include <asm/unistd.h>
 #include <stdio.h>
-#include "ListBaseQueue.h"
-
 
 #include "include/lab1_sched_types.h"
 

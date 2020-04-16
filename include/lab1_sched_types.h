@@ -28,7 +28,7 @@ typedef process data;
 
 
 /********************************* Queue Header *************************************/
-/*
+
 #define TRUE   1
 #define FALSE   0
 
@@ -54,7 +54,7 @@ int QIsEmpty(Queue * pq);
 void Enqueue(Queue * pq, Data data);
 Data Dequeue(Queue * pq);
 Data QPeek(Queue * pq);
-*/
+
 /**************************************************************************/
 
 
