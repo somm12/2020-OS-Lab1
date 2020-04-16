@@ -86,6 +86,7 @@ Data Dequeue(Queue * pq)
 
 void fifo(process arr[],  Queue * pq, int total_time){
 	Queue output;
+	QueueInit(&output);
 	int k = 0;
 	process running[1] = {{-1,-1}};				// declaration of structure array
 	process init[1]= {{-1,-1}};					// this is for the case the first process's arrive time is not zero. because of Qpeek.
@@ -105,7 +106,7 @@ void fifo(process arr[],  Queue * pq, int total_time){
 
 		if (running[0].arrive_time == -1){							// if none of process is running
 			running[0] = QPeek(pq);								// put process into running struct
-			Dequeue(&pq);											// pull out the process
+			Dequeue(pq);											// pull out the process
 		}
 		else{														// if some process is running
 			if (running[0].arrive_time == i){						// if it is the first time the process has runned
