@@ -18,11 +18,11 @@
  * You need to Declare functions in  here
  */
 
-typedef struct{
+typedef struct process{
 	//process_name string
 	int arrive_time;
 	int service_time;
-}process
+} __attribute__ ((packed)) process;
 
 typedef process data;
 
