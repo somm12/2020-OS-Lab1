@@ -37,11 +37,20 @@
 
 int main(int argc, char *argv[]){
 
-Queue pq;
+Queue pq; 
 QueueInit(&pq);
-process arr[5] = {{2,6},{4,4}{0,3},{6,5},{8,2}};
-fifo(arr, &pq, sizeof(arr) / sizeof(process));
+process arr[5] = {{2,6},{4,4},{0,3},{6,5},{8,2}};
+
+int process_num = sizeof(arr)/sizeof(process);
+
+int total_time;
+
+for (int i=0 ; i<2*process_num ; i++){
+    total_time += arr[i].arrive_time;
+    total_time += arr[i].service_time;
+}
+
+fifo(arr, &pq, process_num);
 
 return 0;
 }
-
