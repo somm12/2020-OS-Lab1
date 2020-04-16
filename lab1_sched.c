@@ -87,7 +87,7 @@ Data Dequeue(Queue * pq)
 /************************************************ FIFO Implementation  **********************************************/
 
 void fifo(process arr[],  Queue * pq, int total_time){
-	Queue* output;
+	Queue output;
 	int k = 0;
 	process running[1] = {{-1,-1}};				// declaration of structure array
 	process init[1]= {{-1,-1}};					// this is for the case the first process's arrive time is not zero. because of Qpeek.

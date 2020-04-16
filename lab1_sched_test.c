@@ -28,7 +28,7 @@
 #include <pthread.h>
 #include <asm/unistd.h>
 
-#include "lab1_sched_types.h"
+#include "include/lab1_sched_types.h"
 
 /*
  * you need to implement scheduler simlator test code.
@@ -37,5 +37,11 @@
 
 int main(int argc, char *argv[]){
 
+Queue pq;
+QueueInit(&pq);
+process arr[5] = {{2,6},{4,4}{0,3},{6,5},{8,2}};
+fifo(arr, &pq, sizeof(arr) / sizeof(process));
+
+return 0;
 }
 
