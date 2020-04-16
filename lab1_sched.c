@@ -95,7 +95,7 @@ void fifo(process arr[],  Queue * pq, int total_time){
 		for (int j = 0 ; j < sizeof(arr) / sizeof(process) ; j++){	// j = number of process
 			if (arr[j].arrive_time == i) {					// if there is a process has same arrive time with i
 				if(i == 0){Dequeue(pq);}					// this is the case for the first procees's arrive time is zero. because of Dequeue.when the queue is empty. error
-				Enqueue(&pq, arr[j]);						// enqueue the process
+				Enqueue(pq, arr[j]);						// enqueue the process
 			}
 		}
 		if(QPeek(pq).arrive_time == i && k == 0){
