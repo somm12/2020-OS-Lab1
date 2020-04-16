@@ -29,7 +29,7 @@
 #include <asm/unistd.h>
 #include <stdio.h>
 
-#include "include/lab1_sched_types.h"
+#include "lab1_sched_types.h"
 
 /******************************** Queue Implementation  *************************************/
 
@@ -91,10 +91,11 @@ Data QPeek(Queue * pq)
 
 /************************************************ FIFO Implementation  **********************************************/
 
+
 void fifo(process arr[],  Queue * pq, int total_time){
     Queue output;
     QueueInit(&output);
-    int k = 0;
+	int k = 0;
     process running[1] = {{-2,-2}};             // declaration of structure array
     process init[1]= {{-1,-1}};                 // this is for the case the first process's arrive time is not zero. because of Qpeek.
     Enqueue(pq, init[0]);
@@ -130,7 +131,8 @@ void fifo(process arr[],  Queue * pq, int total_time){
     while(!QIsEmpty(&output)){
         arr[i] = Dequeue(&output);// make structure array which is sorted for output
     }
-for (int i=0 ; i < process_num ; i++){
-    printf("arr[%d].arrive_time = %d",i, arr[i].arrive_time);
-    printf("arr[%d].service_time = %d",i, arr[i].service_time);
+	for (int i=0 ; i < process_num ; i++){
+		printf("arr[%d].arrive_time = %d",i, arr[i].arrive_time);
+		printf("arr[%d].service_time = %d",i, arr[i].service_time);
+	}
 }
