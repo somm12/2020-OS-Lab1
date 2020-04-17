@@ -319,8 +319,7 @@ void rr(process arr[], Queue* pq, int time, int size) {
 		i++;
 	}
 	for (int i = 0; i < size; i++) {
-	
-		total_service_time += sort[i].service_time;
+		total_service_time += arr[i].service_time;
 	}
 	rrgraph(sort, size, total_service_time);
 }
