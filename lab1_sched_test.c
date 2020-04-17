@@ -43,7 +43,7 @@ int main(int argc, char *argv[]){
 	process arr[5] = {{2,6,'A'},{4,4,'B'},{0,3,'C'},{6,5,'D'},{8,2,'E'}};
 	int process_num = sizeof(arr)/sizeof(process);
 	int total_time = 0;
-	process test[20] = {{2,1,'B'}, {4,1,'A'}, {6,1,'C'}, {6,1,'A'}, {6,1,'D'}};
+//	process test[20] = {{2,1,'B'}, {4,1,'A'}, {6,1,'C'}, {6,1,'A'}, {6,1,'D'}};
 
 	for (int i=0 ; i<process_num ; i++){
 		total_time += arr[i].arrive_time;
@@ -51,7 +51,7 @@ int main(int argc, char *argv[]){
 	}
 
 	fifo(arr, &pq, total_time, process_num);
-//	rr(arr, &pq, total_time, process_num);
-	rrgraph(test, 5, 5);
+	rr(arr, &pq, total_time, process_num);
+//	rrgraph(test, 5, 5);
 	return 0;
 }
