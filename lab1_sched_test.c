@@ -50,7 +50,7 @@ int main(int argc, char *argv[]){
 	}
 
 	fifo(arr, &pq, total_time, process_num);
-//	rr(arr, &pq, total_time, process_num);
+	rr(arr, &pq, total_time, process_num);
 
 	return 0;
 }
