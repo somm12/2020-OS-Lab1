@@ -159,18 +159,18 @@ void fifo(process arr[], Queue* pq, int total_time, int size) {
 		//if some process is running
 		
 
-		if (QIsEmpty(pq) == 1 && running[0].service_time == 0)break;
+		if(QIsEmpty(pq) == 1 && running[0].service_time == 0)break;
 
 	}
 	int i = 0;
 
-	while (QIsEmpty(&output)==0) {
+	while(QIsEmpty(&output)==0) {
 		arr[i] = Dequeue(&output);// make structure array which is sorted for output
 		i++;//(suit format:struct array) to graph funtion input)	
 	}
 	
 	int total_service_time = 0;
-	for (int i = 0; i < size; i++) {
+	for(int i = 0; i < size; i++) {
 		total_service_time += arr[i].service_time;
 
 	}
@@ -235,9 +235,7 @@ void graph(process arr[], int size,int total_service_time) {
 /************************************************ RR Graph Implementation *********************************************/
 
 void rrgraph(process arr[], int size, int time) {
-   int sum = 0;
-
-
+   
    /***************************** x축 그리기 *****************************/
 
    for (int j = 0; j <= time; j++){ // 20 = sum of the service time
@@ -261,7 +259,7 @@ void rrgraph(process arr[], int size, int time) {
         printf("%c", 65 + i);
         printf("|");
         for (int j = 0; j < time ; j++){
-            if (arr[j].name == 65 + i){
+            if (arr[j].process_name == 65 + i){
                 printf("■■ ");
             }
             else printf("   ");
@@ -276,7 +274,7 @@ void rr(process arr[], Queue* pq, int time, int size) {
 	QueueInit(&output);
 	int total_service_time = 0;
 	int k = 0;
-	int signal;//다른 프로세스가 수행하기 전 신호변수
+	int signal = 0;//다른 프로세스가 수행하기 전 신호변수
 	process sort[time];
 	process running[1] = { { -2,-2 } }; // 실행 중인 프로세스를 보관한다
 	process init[1] = { { -1,-1 } };	// 첫 프로세스가 실행하기 전까지 큐가 비어있지 않게 해주는 역할
@@ -299,7 +297,7 @@ void rr(process arr[], Queue* pq, int time, int size) {
 			}
 		}
 		if (signal == -1) {		// 프로세스의 실행이 막 끝났을 때 또는 실행 중인 프로세스가 없을 때
-			if (running[0].service_time != 0 && running[0].service_time != -2) }//이전 루프에서 service_time이 0이 안되었다면
+			if (running[0].service_time != 0 && running[0].service_time != -2) {//이전 루프에서 service_time이 0이 안되었다면
 
 				Enqueue(pq, running[0]);		// 
 			}
@@ -310,20 +308,19 @@ void rr(process arr[], Queue* pq, int time, int size) {
 		running[0].service_time -= 1;		// running의 service_time 감소
 		signal = -1;		// running의 signal 초기화
 
-		if (QIsEmpty(pq) == 1 && running[0].service_time == 0) {
+		if(QIsEmpty(pq) == 1 && running[0].service_time == 0) {
 			break; // 더 이상 Queue에 남은 프로세스가 없으면 종료
 		}
 	}
 
 	int i = 0;
-	while (QIsEmpty(&output) == 0) {
+	while(QIsEmpty(&output) == 0) {
 		sort[i] = Dequeue(&output);
 		i++;
-	}/*
+	}
 	for (int i = 0; i < size; i++) {
-		sort[i].service_time = 1;
-		printf("%d %d\n", sort[i].arrive_time, sort[i].service_time);
+	
 		total_service_time += sort[i].service_time;
-	}*/
-	rrgraph(sort, size, time);
+	}
+	rrgraph(sort, size, total_service_time);
 }
