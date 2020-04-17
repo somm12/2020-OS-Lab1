@@ -140,7 +140,7 @@ void graph(process arr[], int size, int time) {
 
 /************************************************ FIFO Implementation  **********************************************/
 
-void fifo(process arr[], Queue* pq, int total_time, int size) {
+void fifo(process arr[], Queue* pq, int time, int size) {
 	Queue output;
 	QueueInit(&output);
 	int total_service_time = 0;
@@ -148,14 +148,14 @@ void fifo(process arr[], Queue* pq, int total_time, int size) {
 	process running[1] = { { -2,-2 } };/// declaration of structure array
 	process init[1] = { { -1,-1 } };// this is for the case the first process's arrive time is not zero. because of Qpeek.
 	Enqueue(pq, init[0]);
-	for (int i = 0; i < total_time; i++) {		// i = time (x axis) 
+	for (int i = 0; i < time; i++) {		// i = time (x axis) 
 
 		for (int j = 0; j < size; j++) {	// j = number of process
 			if (arr[j].arrive_time == i) {		// if there is a process has same arrive time with i
-				if (i == 0) {
-				
-					Dequeue(pq);
-					
+				if (k == 0) {
+					if (QPeek(pq).arrive_time == -1){
+						Dequeue(pq);
+					}
 				}// this is the case for the first procees's arrive time is zero. because of Dequeue.when the queue is empty. error
 				Enqueue(pq, arr[j]);
 			
@@ -205,4 +205,57 @@ void fifo(process arr[], Queue* pq, int total_time, int size) {
 	
 	graph(arr, size, total_service_time);////call funtion to draw the FIFO graph
 
+}
+
+/************************************************ RR Implementation  **********************************************/
+
+void rr(process arr[], Queue* pq, int time, int size) {
+	Queue output;
+	QueueInit(&output);
+	int total_service_time = 0;
+	int k = 0;
+	process running[1] = { { -2,-2 } };/// declaration of structure array
+	process init[1] = { { -1,-1 } };// this is for the case the first process's arrive time is not zero. because of Qpeek.
+	Enqueue(pq, init[0]);
+	for (int i = 0; i < time; i++) {		// i = time (x axis) 
+		for (int j = 0; j < size; j++) {	// j = number of process
+			if (arr[j].arrive_time == i) {		// if there is a process has same arrive time with i
+				if (k == 0) {
+					if (QPeek(pq).arrive_time == -1){
+						Dequeue(pq);
+					}
+				}
+				if (k == 1)  Enqueue(pq, arr[j]);	
+			}
+		}
+		
+		Enqueue(pq, running[0]);
+
+		if(k==0){
+			if (QPeek(pq).arrive_time == i) {
+				running[0].arrive_time = -1;
+				k = 1;
+			}
+		}
+
+		if (running[0].arrive_time == -1) {
+			running[0] = QPeek(pq);
+			Dequeue(pq);
+			Enqueue(&output, running[0]);
+		}
+		if (--running[0].service_time != 0){ 
+			running[0].arrive_time = -1;	
+		}
+		if (QIsEmpty(pq) == 1 && running[0].service_time == 0)break;
+	}
+	int i = 0;
+	while (QIsEmpty(&output)==0) {
+		arr[i] = Dequeue(&output);
+		i++;	
+	}
+	for (int i = 0; i < size; i++) {
+		printf("%d %d\n", arr[i].arrive_time, arr[i].service_time);
+		total_service_time += arr[i].service_time;
+	}
+	graph(arr, size, total_service_time);
 }
