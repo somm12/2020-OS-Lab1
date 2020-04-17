@@ -41,9 +41,7 @@ int main(int argc, char *argv[]){
 	Queue pq; 
 	QueueInit(&pq);
 	process arr[5] = {{2,6},{4,4},{0,3},{6,5},{8,2}};
-
 	int process_num = sizeof(arr)/sizeof(process);
-
 	int total_time = 0;
 
 	for (int i=0 ; i<process_num ; i++){
@@ -52,6 +50,7 @@ int main(int argc, char *argv[]){
 	}
 
 	fifo(arr, &pq, total_time, process_num);
-	rr(arr, &pq, total_time, process_num);
+//	rr(arr, &pq, total_time, process_num);
+
 	return 0;
 }
