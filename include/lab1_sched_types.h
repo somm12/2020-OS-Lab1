@@ -54,7 +54,9 @@ Data QPeek(Queue * pq);
 /****************************function for print FIFO*************************************/
 void fifo_workload_table(int size, process arr[]);
 void fifo(process arr[], Queue * pq, int total_time, int size);
+void rr(process arr[], Queue *pq, int time, int size);
 void graph(process arr[], int size, int total_service_time);
+void rrgraph(process arr[], int size, int time);
 #endif /* LAB1_HEADER_H*/
 
 

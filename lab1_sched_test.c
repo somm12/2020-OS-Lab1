@@ -51,6 +51,7 @@ int main(void){
 		total_time += arr[i].service_time;
 	}
 	fifo(arr, &pq, total_time, size);
+	rr(arr, &pq, total_time, size);
 /***********another example FIFO ***************/
 	process arr2[5] = { {1,2,'A'},{3,5,'B'},{2,3,'C'}, {4,4,'D'},{6,8,'E'} };
 	size = sizeof(arr2) / sizeof(process);
