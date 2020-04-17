@@ -40,7 +40,7 @@ int main(int argc, char *argv[]){
 
 	Queue pq; 
 	QueueInit(&pq);
-	process arr[5] = {{2,6},{4,4},{0,3},{6,5},{8,2}};
+	process arr[5] = {{2,6,'A'},{4,4,'B'},{0,3,'C'},{6,5,'D'},{8,2,'E'}};
 	int process_num = sizeof(arr)/sizeof(process);
 	int total_time = 0;
 

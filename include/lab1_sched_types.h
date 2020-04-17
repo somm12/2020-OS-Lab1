@@ -19,7 +19,6 @@
  */
 
 typedef struct process{
-    //process_name string
     int arrive_time;
     int service_time;
 	char name;

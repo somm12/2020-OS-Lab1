@@ -138,6 +138,52 @@ void graph(process arr[], int size, int time) {
 }
 
 
+/************************************************ Graph Implementation *********************************************/
+
+void rrgraph(process arr[], int size, int time) {
+   int sum = 0;
+
+   char temp[5] = { 'A','B','C','D','E' };
+
+
+
+   /***************************** x축 그리기 *****************************/
+   
+   for (int j = 0; j <= time; j++){ // 20 = sum of the service time
+      if (j >  0){ 
+         if (j > 10){
+            printf("%d ", j); 
+         }
+         else {
+            printf(" %d ", j); 
+         }
+      }   
+      else{
+         printf("   ");
+      }   
+   }   
+   printf("\n");
+
+   /*********************************************************************/
+   
+    for (int i = 0; i < size; i++) {
+        printf("%c", 65 + i); 
+        printf("|");
+        for (int j = 0; j < time ; j++){
+            if (arr[j].name == 65 + i){ 
+                printf("■■ ");
+            }
+            else printf("   ");
+        }
+        printf("\n");
+    }
+    return;
+}
+
+
+
+
+
 /************************************************ FIFO Implementation  **********************************************/
 
 void fifo(process arr[], Queue* pq, int time, int size) {
@@ -247,5 +293,5 @@ void rr(process arr[], Queue* pq, int time, int size) {
 		printf("%d %d\n", sort[i].arrive_time, sort[i].service_time);
 		total_service_time += sort[i].service_time;
 	}
-	graph(sort, size, total_service_time);
+	rrgraph(sort, size, total_service_time);
 }
