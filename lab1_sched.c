@@ -138,13 +138,10 @@ void graph(process arr[], int size, int time) {
 }
 
 
-/************************************************ Graph Implementation *********************************************/
+/************************************************ RR Graph Implementation *********************************************/
 
 void rrgraph(process arr[], int size, int time) {
    int sum = 0;
-
-   char temp[5] = { 'A','B','C','D','E' };
-
 
 
    /***************************** x축 그리기 *****************************/
@@ -245,6 +242,7 @@ void rr(process arr[], Queue* pq, int time, int size) {
 	QueueInit(&output);
 	int total_service_time = 0;
 	int k = 0;
+	int signal = -2;
 	process sort[time];
 	process running[1] = { { -2,-2 } }; // 실행 중인 프로세스를 보관한다
 	process init[1] = { { -1,-1 } };	// 첫 프로세스가 실행하기 전까지 큐가 비어있지 않게 해주는 역할
@@ -253,7 +251,7 @@ void rr(process arr[], Queue* pq, int time, int size) {
 		for (int j = 0; j < size; j++) {				// process_num  만큼 횟수 반복
 			if (arr[j].arrive_time == i) {				// arrive_time 이 현재 시간이랑 같은 프로세스가 있으면
 				if (k == 0) {
-					if (QPeek(pq).arrive_time == -1){
+					if (QPeek(pq).arrive_time == -2){
 						Dequeue(pq);					// Init 에서 Queue 에 넣어둔 초기 값을 제거 (일회성)
 					}
 				}
@@ -262,11 +260,11 @@ void rr(process arr[], Queue* pq, int time, int size) {
 		}
 		if(k==0){ // (일회성)
 			if (QPeek(pq).arrive_time == i) {	// Queue 의 Front 에 위치한 프로세스의 arrive_time 이 현재 시간과 같다면
-				running[0].arrive_time = -1;	// running 의 arrive_time 을 -1로 초기화 -> 다음 if문 수행 가능
+				signal = -1;	// running 의 arrive_time 을 -1로 초기화 -> 다음 if문 수행 가능
 				k = 1;
 			}	
 		}
-		if (running[0].arrive_time == -1) {		// 프로세스의 실행이 막 끝났을 때 또는 실행 중인 프로세스가 없을 때
+		if (signal == -1) {		// 프로세스의 실행이 막 끝났을 때 또는 실행 중인 프로세스가 없을 때
 			if (running[0].service_time != 0){	// 이전 루프에서 service_time이 0이 안되었다면
 				
 				Enqueue(pq, running[0]);		// 
@@ -276,7 +274,7 @@ void rr(process arr[], Queue* pq, int time, int size) {
 			Enqueue(&output, running[0]);		// running 에 넣어준 프로세스를 output 으로 Enqueue
 		}
 			running[0].service_time -= 1;		// running의 service_time 감소
-			running[0].arrive_time = -1;		// running의 arrive_time 초기화
+			signal = -1;		// running의 arrive_time 초기화
 				
 		if (QIsEmpty(pq) == 1 && running[0].service_time == 0){
 			break; // 더 이상 Queue에 남은 프로세스가 없으면 종료

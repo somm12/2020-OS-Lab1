@@ -54,7 +54,7 @@ Data QPeek(Queue * pq);
 
 /**************************************************************************/
 
-
+void rrgraph(process arr[], int size, int time);
 void graph(process arr[], int size, int time);
 void fifo(process arr[], Queue * pq, int total_time, int process_num);
 void rr(process arr[], Queue * pq, int total_time, int process_num);
