@@ -242,52 +242,57 @@ void rr(process arr[], Queue* pq, int time, int size) {
 	QueueInit(&output);
 	int total_service_time = 0;
 	int k = 0;
-	int signal = 0;//다른 프로세스가 수행하기 전 신호변수
+	int signal = 0;
 	process sort[time];
 	process running[1] = { { -2,-2 } }; // 실행 중인 프로세스를 보관한다
 	process init[1] = { { -1,-1 } };	// 첫 프로세스가 실행하기 전까지 큐가 비어있지 않게 해주는 역할
 	Enqueue(pq, init[0]);
-	for (int i = 0; i < time; i++) {					// total_time 만큼 횟수 반복
+	for (int i = 0; i < time; i++) {					// total_time 만큼 횟수 반복 
 		for (int j = 0; j < size; j++) {				// process_num  만큼 횟수 반복
 			if (arr[j].arrive_time == i) {				// arrive_time 이 현재 시간이랑 같은 프로세스가 있으면
 				if (k == 0) {
-					if (QPeek(pq).arrive_time == -1) {
+					if (QPeek(pq).arrive_time == -1){
 						Dequeue(pq);					// Init 에서 Queue 에 넣어둔 초기 값을 제거 (일회성)
 					}
 				}
 				Enqueue(pq, arr[j]);					// 프로세스를 pq 에 Enqueue
 			}
 		}
-		if (k == 0) { // (일회성)
+		
+		if(k==0){ // (일회성)
 			if (QPeek(pq).arrive_time == i) {	// Queue 의 Front 에 위치한 프로세스의 arrive_time 이 현재 시간과 같다면
-				signal = -1;	// running 의 signal 을 -1로 초기화 -> 다음 if문 수행 가능
+				signal = 1;	// running 의 arrive_time 을 -1로 초기화 -> 다음 if문 수행 가능
 				k = 1;
-			}
+			}	
 		}
-		if (signal == -1) {		// 프로세스의 실행이 막 끝났을 때 또는 실행 중인 프로세스가 없을 때
-			if (running[0].service_time != 0 && running[0].service_time != -2) {//이전 루프에서 service_time이 0이 안되었다면
-
-				Enqueue(pq, running[0]);		//
+		if (signal == 1) {		// 프로세스의 실행이 막 끝났을 때 또는 실행 중인 프로세스가 없을 때
+			if (running[0].service_time != 0 && running[0].service_time != -2){
+				Enqueue(pq, running[0]);
 			}
-			running[0] = QPeek(pq);			// Queue Front 에 위치한 프로세스를 running 으로
-			Dequeue(pq);					// 옮긴 프로세스를 Dequeue
+			running[0] = QPeek(pq);				// Queue Front 에 위치한 프로세스를 running 으로
+			Dequeue(pq);						// 옮긴 프로세스를 Dequeue
 			Enqueue(&output, running[0]);		// running 에 넣어준 프로세스를 output 으로 Enqueue
 		}
-		running[0].service_time -= 1;		// running의 service_time 감소
-		signal = -1;		// running의 signal 초기화
-
-		if(QIsEmpty(pq) == 1 && running[0].service_time == 0) {
+			running[0].service_time -= 1;		// running의 service_time 감소
+			running[0].arrive_time += 1;		// running의  arrive_time 증가
+			//Enqueue(pq, running[0]);
+			if (running[0].service_time == 0) {	// service_time 이 0이 되면
+				signal = 1;						// signal 초기화
+			}
+		if (QIsEmpty(pq) == 1 && running[0].service_time == 0){
 			break; // 더 이상 Queue에 남은 프로세스가 없으면 종료
 		}
 	}
-
+	
 	int i = 0;
-	while(QIsEmpty(&output) == 0) {
+	while (QIsEmpty(&output)==0) {
 		sort[i] = Dequeue(&output);
-		i++;
+		i++;	
 	}
 	for (int i = 0; i < size; i++) {
-		total_service_time += arr[i].service_time;
+		sort[i].service_time = 1;
+		printf("%d %d\n", sort[i].arrive_time, sort[i].service_time);
+		total_service_time += sort[i].service_time;
 	}
 	rrgraph(sort, size, total_service_time);
 }
