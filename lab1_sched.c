@@ -301,6 +301,10 @@ void mlfq(process arr[], Queue* pq, int time, int size) {
 	Queue P3;
 	Queue P4;
 	Queue output;
+	QueueInit(&P1);
+	QueueInit(&P2);
+    QueueInit(&P3);
+    QueueInit(&P4);
 	QueueInit(&output);
 	int total_service_time = 0;
 	int k = 0;
@@ -317,8 +321,8 @@ void mlfq(process arr[], Queue* pq, int time, int size) {
 						Dequeue(&P1);					// Init 에서 Queue 에 넣어둔 초기 값을 제거 (일회성)
 					}
 				}
-				Enqueue(&P1, arr[j]);					// 프로세스를 P1 에 Enqueue
 				arr[j].priority = 1;
+				Enqueue(&P1, arr[j]);					// 프로세스를 P1 에 Enqueue
 			}
 		}
 		if (k == 0) { // (일회성)
@@ -329,7 +333,7 @@ void mlfq(process arr[], Queue* pq, int time, int size) {
 		}
 		if (signal == -1) {		// 프로세스의 실행이 막 끝났을 때 또는 실행 중인 프로세스가 없을 때
 			if (running[0].service_time != 0 && running[0].service_time != -2) {	//이전 루프에서 service_time이 0이 안되었다면
-				switch(running[0].priority){ // arr[j]의 priority 값에 따라서 다른 Queue에 Enqueue를 해준다
+				switch(running[0].priority){ // running[0]의 priority 값에 따라서 다른 Queue에 Enqueue를 해준다
 					case 1:
 						running[0].priority = 2;
 						Enqueue(&P2,running[0]);
@@ -345,25 +349,26 @@ void mlfq(process arr[], Queue* pq, int time, int size) {
 						break;
 				}
 			}
-			for (int l=0 ; l<4; l++){	// 모든 Queue 중에서 우선순위가 제일 높은 Queue의  Front에 위치한 프로세스를 running으로
-				if (QIsEmpty(&P1) != 0){
+			for (int l=0 ; l<4; l++){	// 모든 Queue 중에서 우선순위가 제일 높은 Queue의 Front에 위치한 프로세스를 running으로
+				if (QIsEmpty(&P1) == 0){
 					running[0] = QPeek(&P1);
 					Dequeue(&P1);
 				}
-				else if (QIsEmpty(&P2) != 0){
+				else if (QIsEmpty(&P2) == 0){
 					running[0] = QPeek(&P2);
 					Dequeue(&P2);
 				}
-				else if (QIsEmpty(&P3) != 0){
+				else if (QIsEmpty(&P3) == 0){
 					running[0] = QPeek(&P3);
 					Dequeue(&P3);
 				}
-				else if (QIsEmpty(&P4) != 0){
+				else if (QIsEmpty(&P4) == 0){
 					running[0] = QPeek(&P4);
 					Dequeue(&P4);
 				}							// running[0] = QPeek(pq);
 			}								// Dequeue(pq);
 			Enqueue(&output, running[0]);	// running 에 넣어준 프로세스를 output 으로 Enqueue
+			printf("Enqueue in P%d", &running[0].priority);
 		}
 		running[0].service_time -= 1;		// running의 service_time 감소
 		signal = -1;		// running의 signal 초기화
