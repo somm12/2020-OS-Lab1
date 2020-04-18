@@ -349,31 +349,31 @@ void mlfq(process arr[], Queue* pq, int time, int size) {
 						break;
 				}
 			}
-			for (int l=0 ; l<4; l++){	// 모든 Queue 중에서 우선순위가 제일 높은 Queue의 Front에 위치한 프로세스를 running으로
-				if (QIsEmpty(&P1) == 0){
-					running[0] = QPeek(&P1);
-					Dequeue(&P1);
-				}
-				else if (QIsEmpty(&P2) == 0){
-					running[0] = QPeek(&P2);
-					Dequeue(&P2);
-				}
-				else if (QIsEmpty(&P3) == 0){
-					running[0] = QPeek(&P3);
-					Dequeue(&P3);
-				}
-				else if (QIsEmpty(&P4) == 0){
-					running[0] = QPeek(&P4);
-					Dequeue(&P4);
-				}							// running[0] = QPeek(pq);
-			}								// Dequeue(pq);
+			// 모든 Queue 중에서 우선순위가 제일 높은 Queue의 Front에 위치한 프로세스를 running으로
+			if (QIsEmpty(&P1) == 0){
+				running[0] = QPeek(&P1);
+				Dequeue(&P1);
+			}
+			else if (QIsEmpty(&P2) == 0){
+				running[0] = QPeek(&P2);
+				Dequeue(&P2);
+			}
+			else if (QIsEmpty(&P3) == 0){
+				running[0] = QPeek(&P3);
+				Dequeue(&P3);
+			}
+			else if (QIsEmpty(&P4) == 0){
+				running[0] = QPeek(&P4);
+				Dequeue(&P4);
+				//rr(&P4, pq, time, size);
+			}							// running[0] = QPeek(pq);
+										// Dequeue(pq);
 			Enqueue(&output, running[0]);	// running 에 넣어준 프로세스를 output 으로 Enqueue
-			printf("Enqueue in P%d", &running[0].priority);
 		}
 		running[0].service_time -= 1;		// running의 service_time 감소
 		signal = -1;		// running의 signal 초기화
 
-		if(QIsEmpty(pq) == 1 && running[0].service_time == 0) {
+		if(QIsEmpty(&P1) && QIsEmpty(&P2) && QIsEmpty(&P3) && QIsEmpty(&P4)  == 1 && running[0].service_time == 0) {
 			break; // 더 이상 Queue에 남은 프로세스가 없으면 종료
 		}
 	}
