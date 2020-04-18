@@ -40,7 +40,8 @@ int main(int argc, char *argv[]){
 
 	Queue pq; 
 	QueueInit(&pq);
-	process arr[5] = {{0,3,'A'},{ 2,6,'B' },{ 4,4,'C'},{ 6,5,'D'},{ 8,2,'E'}};
+	process arr[5] = {{0,3,'A'},{2,6,'B' },{4,4,'C'},{6,5,'D'},{8,2,'E'}};
+
 	int process_num = sizeof(arr)/sizeof(process);
 	int total_time = 0;
 	
@@ -52,5 +53,6 @@ int main(int argc, char *argv[]){
 	fifo(arr, &pq, total_time, process_num);
 	rr(arr, &pq, total_time, process_num);
 	mlfq(arr, &pq, total_time, process_num);
+
 	return 0;
 }

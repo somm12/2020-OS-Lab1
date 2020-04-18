@@ -345,10 +345,20 @@ void mlfq(process arr[], Queue* pq, int time, int size) {
 						}
 						break;
 					case 2:
-						running[0].priority = 3;
-						Enqueue(&P3,running[0]);
+						if (QIsEmpty(&P1) && QIsEmpty(&P2) && QIsEmpty(&P3) && QIsEmpty(&P4) == 1){
+							running[0].priority = 2;
+							Enqueue(&P2,running[0]);
+						}
+						else{
+							running[0].priority = 3;
+							Enqueue(&P3,running[0]);
+						}
 						break;
 					case 3:
+						if (QIsEmpty(&P1) && QIsEmpty(&P2) && QIsEmpty(&P3) && QIsEmpty(&P4) == 1){
+							running[0].priority = 3;
+							Enqueue(&P3,running[0]);
+						}
 					case 4:
 						running[0].priority = 4;
 						Enqueue(&P4,running[0]);
