@@ -22,6 +22,7 @@ typedef struct process{
     int arrive_time;
     int service_time;
 	char name;
+	int priority;
 } __attribute__ ((packed)) process;
 
 typedef process Data;
@@ -58,4 +59,5 @@ void rrgraph(process arr[], int size, int time);
 void graph(process arr[], int size, int time);
 void fifo(process arr[], Queue * pq, int total_time, int process_num);
 void rr(process arr[], Queue * pq, int total_time, int process_num);
+void mlfq(process arr[], Queue * pq, int total_time, int process_num);
 #endif /* LAB1_HEADER_H*/
