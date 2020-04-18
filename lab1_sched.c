@@ -335,8 +335,14 @@ void mlfq(process arr[], Queue* pq, int time, int size) {
 			if (running[0].service_time != 0 && running[0].service_time != -2) {	//이전 루프에서 service_time이 0이 안되었다면
 				switch(running[0].priority){ // running[0]의 priority 값에 따라서 다른 Queue에 Enqueue를 해준다
 					case 1:
-						running[0].priority = 2;
-						Enqueue(&P2,running[0]);
+						if (QIsEmpty(&P1) && QIsEmpty(&P2) && QIsEmpty(&P3) && QIsEmpty(&P4) == 1){
+							running[0].priority = 1;
+							Enqueue(&P1,running[0]); // 프로세스가 단독으로 실행중이여서 Queue가 전부 비어있을 때는 우선순위를 그대로
+						}
+						else{
+							running[0].priority = 2;
+							Enqueue(&P2,running[0]);
+						}
 						break;
 					case 2:
 						running[0].priority = 3;
@@ -374,7 +380,7 @@ void mlfq(process arr[], Queue* pq, int time, int size) {
 		signal = -1;		// running의 signal 초기화
 
 		if(QIsEmpty(&P1) && QIsEmpty(&P2) && QIsEmpty(&P3) && QIsEmpty(&P4)  == 1 && running[0].service_time == 0) {
-			break; // 더 이상 Queue에 남은 프로세스가 없으면 종료
+			break; // 더 이상 Queue에 남은 프로세스가 없으면 종료 (혹시 중간에 전부 비어버려서 멈출 수도 있으니 수정 필요할지도?)
 		}
 	}
 
