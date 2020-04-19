@@ -28,7 +28,6 @@
 #include <pthread.h>
 #include <asm/unistd.h>
 #include <stdio.h>
-
 #include "lab1_sched_types.h"
 
 /******************************** Queue Implementation  *************************************/
@@ -88,11 +87,11 @@ Data QPeek(Queue * pq)
 {
    return pq->front->data;
 }
-/************************************************ Graph Implementation *********************************************/
 
-void graph(process arr[], int size, int time) {
+/************************************************ FIFO Graph Implementation *********************************************/
+
+void fifo_graph(process arr[], int size, int time) {
    int sum = 0;
-
    char temp[5] = { 'A','B','C','D','E' };
    for (int j = 0; j <= time; j++){ // 20 = sum of the service time
       if (j >  0){
@@ -107,14 +106,13 @@ void graph(process arr[], int size, int time) {
          printf("   ");
       }
    }
-
    printf("\n");
+
    for (int i = 0; i < size; i++) {
       if (i < 1)
       {
          printf("%c", temp[i]);
          printf("|");
-
       }
       for (int k = 0; k < arr[i].service_time; k++) {
          printf("■■ ");
@@ -129,18 +127,15 @@ void graph(process arr[], int size, int time) {
       sum = sum + arr[i].service_time;
       for (int j = 0; j < sum; j++) {
          printf("   ");
-
       }
    }
    printf("\n");
-
    return;
 }
 
+/************************************************ Graph Implementation *********************************************/
 
-/************************************************ RR Graph Implementation *********************************************/
-
-void rrgraph(process arr[], int size, int time) {
+void graph(process arr[], int size, int time) {
    int sum = 0;
 
 
@@ -176,10 +171,6 @@ void rrgraph(process arr[], int size, int time) {
     }
     return;
 }
-
-
-
-
 
 /************************************************ FIFO Implementation  **********************************************/
 
@@ -232,21 +223,26 @@ void fifo(process arr[], Queue* pq, int time, int size) {
 		printf("%d %d\n", sort[i].arrive_time, sort[i].service_time);
 		total_service_time += sort[i].service_time;
 	}
-	graph(sort, size, total_service_time);
+	fifo_graph(sort, size, total_service_time);
 }
 
 /************************************************ RR Implementation  **********************************************/
 
 void rr(process arr[], Queue* pq, int time, int size) {
-	Queue output;
+	Queue output;						// 실행하고 있는 프로세스를 저장해두는 큐
 	QueueInit(&output);
-	int total_service_time = 0;
-	int k = 0;
-	int signal = 0;//다른 프로세스가 수행하기 전 신호변수
-	process sort[time];
-	process running[1] = { { -2,-2 } }; // 실행 중인 프로세스를 보관한다
-	process init[1] = { { -1,-1 } };	// 첫 프로세스가 실행하기 전까지 큐가 비어있지 않게 해주는 역할
+	int total_service_time = 0;			// 전체 실행 시간
+	int k = 0;							// 전체 루프에서 단 한 번만 함수를 실행시키기 위한 변수
+	int signal = 0;						// 프로세스가 실행 중이지 않음을 알려주는 변수
+	process sort[time];					// 출력을 위해 Queue 에 있는  결과값을 저장해두는 배열
+	process running[1] = { { -2,-2 } }; // 실행 중인 프로세스를 보관하기 위한 구조체 배열
+	process init[1] = { { -1,-1 } };	// 첫 프로세스가 실행하기 전까지 큐가 비어있지 않게 해주기 위한 구조체 배열
 	Enqueue(pq, init[0]);
+	
+	for (int i = 0; i < size; i++) {	// 전체 실행 시간 total_service_time 계산
+		total_service_time += arr[i].service_time;
+	}
+
 	for (int i = 0; i < time; i++) {					// total_time 만큼 횟수 반복
 		for (int j = 0; j < size; j++) {				// process_num  만큼 횟수 반복
 			if (arr[j].arrive_time == i) {				// arrive_time 이 현재 시간이랑 같은 프로세스가 있으면
@@ -259,37 +255,34 @@ void rr(process arr[], Queue* pq, int time, int size) {
 			}
 		}
 		if (k == 0) { // (일회성)
-			if (QPeek(pq).arrive_time == i) {	// Queue 의 Front 에 위치한 프로세스의 arrive_time 이 현재 시간과 같다면
-				signal = -1;	// running 의 signal 을 -1로 초기화 -> 다음 if문 수행 가능
+			if (QPeek(pq).arrive_time == i) {			// Queue 의 Front 에 위치한 프로세스의 arrive_time 이 현재 시간과 같다면
+				signal = -1;							// running 의 signal 을 -1로 초기화 -> 다음 if문 수행 가능
 				k = 1;
 			}
 		}
-		if (signal == -1) {		// 프로세스의 실행이 막 끝났을 때 또는 실행 중인 프로세스가 없을 때
-			if (running[0].service_time != 0 && running[0].service_time != -2) {//이전 루프에서 service_time이 0이 안되었다면
+		if (signal == -1) {									   // 프로세스의 실행이 막 끝났을 때 또는 실행 중인 프로세스가 없을 때
+			if (running[0].service_time != 0 && running[0].service_time != -2) {	// 이전 루프에서 service_time이 0이 안되었다면
 
-				Enqueue(pq, running[0]);		//
+				Enqueue(pq, running[0]);											// running[0]에 있는 값을 pq Queue 에 넣어준다
 			}
 			running[0] = QPeek(pq);			// Queue Front 에 위치한 프로세스를 running 으로
 			Dequeue(pq);					// 옮긴 프로세스를 Dequeue
-			Enqueue(&output, running[0]);		// running 에 넣어준 프로세스를 output 으로 Enqueue
+			Enqueue(&output, running[0]);	// running 에 넣어준 프로세스를 output Queue 에 저장한다
 		}
 		running[0].service_time -= 1;		// running의 service_time 감소
-		signal = -1;		// running의 signal 초기화
+		signal = -1;						// running의 signal 초기화
 
 		if(QIsEmpty(pq) == 1 && running[0].service_time == 0) {
-			break; // 더 이상 Queue에 남은 프로세스가 없으면 종료
+			break;							// 더 이상 Queue에 남은 프로세스가 없으면 종료
 		}
 	}
 
 	int i = 0;
-	while(QIsEmpty(&output) == 0) {
+	while(QIsEmpty(&output) == 0) {			// output Queue 에 있는 프로세스 값들을 출력하기 위해 배열로 바꾸는 과정
 		sort[i] = Dequeue(&output);
 		i++;
 	}
-	for (int i = 0; i < size; i++) {
-		total_service_time += arr[i].service_time;
-	}
-	rrgraph(sort, size, total_service_time);
+	graph(sort, size, total_service_time);	// graph 함수 호출
 }
 
 /**************************************************** MLFQ Implementation ****************************************************************/
@@ -298,21 +291,26 @@ void rr(process arr[], Queue* pq, int time, int size) {
 void mlfq(process arr[], int time, int size) {
 	Queue P1;
 	Queue P2;
-	Queue P3;
-	Queue P4;
-	Queue output;
+	Queue P3;							// 우선순위를 정해주기 위한 큐 4개
+	Queue P4;							// P1이 우선순위가 제일 높으며, P4가 우선순위가 제일 낮다
 	QueueInit(&P1);
 	QueueInit(&P2);
     QueueInit(&P3);
     QueueInit(&P4);
+	Queue output;						// 실행하고 있는 프로세스를 저장해두는 큐
 	QueueInit(&output);
-	int total_service_time = 0;
-	int k = 0;
-	int signal = 0;						//다른 프로세스가 수행하기 전 신호변수
-	process sort[time];
-	process running[1] = { { -2,-2 } }; // 실행 중인 프로세스를 보관한다
-	process init[1] = { { -1,-1 } };	// 첫 프로세스가 실행하기 전까지 큐가 비어있지 않게 해주는 역할
-	Enqueue(&P1, init[0]);
+	int total_service_time = 0;			// 전체 실행 시간
+	int k = 0;							// 전체 루프에서 단 한 번만 함수를 실행시키기 위한 변수
+	int signal = 0;						// 프로세스가 실행 중이지 않음을 알려주는 변수
+	process sort[time];					// 출력을 위해 Queue 에 있는  결과값을 저장해두는 배열
+	process running[1] = { { -2,-2 } }; // 실행 중인 프로세스를 보관하기 위한 구조체 배열
+	process init[1] = { { -1,-1 } };	// 첫 프로세스가 실행하기 전까지 큐가 비어있지 않게 해주기 위한 구조체 배열
+	Enqueue(pq, init[0]);
+	
+	for (int i = 0; i < size; i++) {	// 전체 실행 시간 total_service_time 계산
+		total_service_time += arr[i].service_time;
+	}
+
 	for (int i = 0; i < time; i++) {					// total_time 만큼 횟수 반복
 		for (int j = 0; j < size; j++) {				// process_num  만큼 횟수 반복
 			if (arr[j].arrive_time == i) {				// arrive_time 이 현재 시간이랑 같은 프로세스가 있으면
@@ -327,13 +325,13 @@ void mlfq(process arr[], int time, int size) {
 		}
 		if (k == 0) { // (일회성)
 			if (QPeek(&P1).arrive_time == i) {	// Queue 의 Front 에 위치한 프로세스의 arrive_time 이 현재 시간과 같다면
-				signal = -1;	// running 의 signal 을 -1로 초기화 -> 다음 if문 수행 가능
+				signal = -1;					// 다음 if문을 수행하도록 signal 을 -1로 초기화해준다
 				k = 1;
 			}
 		}
-		if (signal == -1) {		// 프로세스의 실행이 막 끝났을 때 또는 실행 중인 프로세스가 없을 때
-			if (running[0].service_time != 0 && running[0].service_time != -2) {	//이전 루프에서 service_time이 0이 안되었다면
-				switch(running[0].priority){ // running[0]의 priority 값에 따라서 다른 Queue에 Enqueue를 해준다
+		if (signal == -1) {									  // 프로세스의 실행이 막 끝났을 때 또는 실행 중인 프로세스가 없을 때
+			if (running[0].service_time != 0 && running[0].service_time != -2) {   // 이전 루프에서 service_time이 0이 안되었다면
+				switch(running[0].priority){				   // running[0]의 priority 값에 따라서 다른 Queue에 Enqueue를 해준다
 					case 1:
 						if (QIsEmpty(&P1) && QIsEmpty(&P2) && QIsEmpty(&P3) && QIsEmpty(&P4) == 1){
 							running[0].priority = 1;
@@ -341,7 +339,7 @@ void mlfq(process arr[], int time, int size) {
 						}
 						else{
 							running[0].priority = 2;
-							Enqueue(&P2,running[0]);
+							Enqueue(&P2,running[0]); // 다른 프로세스가 존재한다면 우선순위를 한단계 낮춘다
 						}
 						break;
 					case 2:
@@ -354,7 +352,7 @@ void mlfq(process arr[], int time, int size) {
 							Enqueue(&P3,running[0]);
 						}
 						break;
-					case 3:
+					case 3:	
 						if (QIsEmpty(&P1) && QIsEmpty(&P2) && QIsEmpty(&P3) && QIsEmpty(&P4) == 1){
 							running[0].priority = 3;
 							Enqueue(&P3,running[0]);
@@ -365,6 +363,7 @@ void mlfq(process arr[], int time, int size) {
 						break;
 				}
 			}
+			
 			// 모든 Queue 중에서 우선순위가 제일 높은 Queue의 Front에 위치한 프로세스를 running으로
 			if (QIsEmpty(&P1) == 0){
 				running[0] = QPeek(&P1);
@@ -381,15 +380,16 @@ void mlfq(process arr[], int time, int size) {
 			else if (QIsEmpty(&P4) == 0){
 				running[0] = QPeek(&P4);
 				Dequeue(&P4);
-			}							// running[0] = QPeek(pq);
-										// Dequeue(pq);
+			}
 			Enqueue(&output, running[0]);	// running 에 넣어준 프로세스를 output 으로 Enqueue
 		}
 		running[0].service_time -= 1;		// running의 service_time 감소
-		signal = -1;		// running의 signal 초기화
+		signal = -1;						// running의 signal 초기화
+
 
 		if(QIsEmpty(&P1) && QIsEmpty(&P2) && QIsEmpty(&P3) && QIsEmpty(&P4)  == 1 && running[0].service_time == 0) {
-			break; // 더 이상 Queue에 남은 프로세스가 없으면 종료
+			count_service_time++;
+			if (count_service_time == size) break; // 더 이상 Queue에 남은 프로세스가 없으면 종료
 		}
 	}
 
@@ -398,10 +398,8 @@ void mlfq(process arr[], int time, int size) {
 		sort[i] = Dequeue(&output);
 		i++;
 	}
-	for (int i = 0; i < size; i++) {
-		total_service_time += arr[i].service_time;
-	}
-	rrgraph(sort, size, total_service_time);
+
+	graph(sort, size, total_service_time);
 }
 
 /************************************************ STRIDE Implementation  **********************************************/
@@ -474,7 +472,7 @@ void stride(process arr[], Queue* pq,int time, int size) {
 	for (int i = 0; i < size; i++) {
 		total_service_time += arr[i].service_time;
 	}
-	rrgraph(sort, size, total_service_time);
+	graph(sort, size, total_service_time);
 }
 
 

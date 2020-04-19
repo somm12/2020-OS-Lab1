@@ -1,8 +1,10 @@
 /*
 *	DKU Operating System Lab
 *	    Lab1 (Scheduler Algorithm Simulator)
-*	    Student id : 
-*	    Student name : 
+*	    Studend id : 32182490
+*	    Student name : An Somin
+*	    Student id : 32182110
+*	    Student name : Seo Museong
 *
 *   lab1_sched_types.h :
 *       - lab1 header file.
@@ -53,13 +55,14 @@ void Enqueue(Queue * pq, Data data);
 Data Dequeue(Queue * pq);
 Data QPeek(Queue * pq);
 
-/**************************************************************************/
+/*********************************** Function Header **********************************/
 
-void rrgraph(process arr[], int size, int time);
 void graph(process arr[], int size, int time);
+void fifo_graph(process arr[], int size, int time);
 void fifo(process arr[], Queue * pq, int total_time, int process_num);
 void rr(process arr[], Queue * pq, int total_time, int process_num);
 void mlfq(process arr[], int total_time, int process_num);
 void stride(process arr[], Queue* pq,int time, int size);
 void bubble_sort(process arr[], int size);
+
 #endif /* LAB1_HEADER_H*/
