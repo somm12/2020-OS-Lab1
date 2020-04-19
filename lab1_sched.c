@@ -73,7 +73,7 @@ Data Dequeue(Queue * pq)
 
 	if (QIsEmpty(pq))
 	{
-		printf("Queue Memory Error!");
+		printf("Queue Memory Error!");;
 		exit(-1);
 	}
 
@@ -91,6 +91,8 @@ Data QPeek(Queue * pq)
 	if (QIsEmpty(pq))
 	{
 		printf("Queue Memory Error!");
+		 printf("location is dequeue");
+
 		exit(-1);
 	}
 
@@ -434,19 +436,14 @@ void stride(process arr[], Queue* pq,int time, int size) {
 	int g = 0;// index 3개의 프로세스를 pass value 비교해서 sort하기위한 배열의 index
 	int total_service_time = 0;
 	int k = 0;
+	process init[1] = {{0,0}};////make 구조체 배열 인덱스자리에 값을 할당하는데 쓰인 크기가 1 인 배열
+	int count_service_time = 0;
 	int signal = 0;//다른 프로세스가 수행하기 전 신호변수
 	process sort[time];
 	process running[1] = { { -2,-2 } }; // 실행 중인 프로세스를 보관한다
-	process init[1] = { { -1,-1 } };	// 첫 프로세스가 실행하기 전까지 큐가 비어있지 않게 해주는 역할
-	Enqueue(pq, init[0]);
 	for (int i = 0; i < time; i++) {					// total_time 만큼 횟수 반복
 		for (int j = 0; j < size; j++) {				// process_num  만큼 횟수 반복
-			if (arr[j].arrive_time == i) {				// arrive_time 이 현재 시간이랑 같은 프로세스가 있으면
-				if (k == 0) {
-					if (QPeek(pq).arrive_time == -1) {
-						Dequeue(pq);					// Init 에서 Queue 에 넣어둔 초기 값을 제거 (일회성)
-					}
-				}
+			if (arr[j].arrive_time == i) {				// arrive_time 이 현재 시간이랑 같은 프로세스가 있으면 
 				Enqueue(pq, arr[j]);					// 프로세스를 pq 에 Enqueue
 			}
 		}
@@ -462,30 +459,41 @@ void stride(process arr[], Queue* pq,int time, int size) {
 				running[0].arrive_time += running[0].priority;//arrivtime은 passvalue를 나타냄.priority는 stride값을 나타냄.
 				make[g] = running[0];
 				//Enqueue(pq, running[0]);
-				g++;
-				if (g == size ) { 
-					g = 0;
-					bubble_sort(make,size);//***************
-					for (int i; i < size; i++) {
-						Enqueue(pq,make[i]);
-					}
-				}
 				//
-			}
+				g++;
+			}}
+			   
+                 if (g == size||running[0].service_time == 0 ) {
+                     g = 0;
+                     bubble_sort(make,size);//***************
+                    for (int i=0; i < size; i++) {
+						if(make[0].service_time!=0)
+						{Enqueue(pq,make[i]);}
+							make[i] = init[0];
+
+                     }
+
+				 }
+
+		//전 프로세스가 서비스 타임이 0이 되었을 때 QPeek을 만나 함수가 끝나버려서 make[]안에 있는 프로세스들을enque
+		
 			running[0] = QPeek(pq);			// Queue Front 에 위치한 프로세스를 running 으로
 			Dequeue(pq);					// 옮긴 프로세스를 Dequeue
-			Enqueue(&output, running[0]);		// running 에 넣어준 프로세스를 output 으로 Enqueue
-		}
+			Enqueue(&output, running[0]);
+				// running 에 넣어준 프로세스를 output 으로 Enqueue
+		
 		running[0].service_time -= 1;		// running의 service_time 감소
 		signal = -1;		// running의 signal 초기화
 
-		if (QIsEmpty(pq) == 1 && running[0].service_time == 0) {
-			break; // 더 이상 Queue에 남은 프로세스가 없으면 종료
+		if(QIsEmpty(pq) == 1 && running[0].service_time == 0) {
+			count_service_time++;
+			if(count_service_time==size)
+				break; // 더 이상 Queue에 남은 프로세스가 없으면 종료
 		}
 	}
 
 	int i = 0;
-	while (QIsEmpty(&output) == 0) {
+	while(QIsEmpty(&output) == 0) {
 		sort[i] = Dequeue(&output);
 		i++;
 	}
