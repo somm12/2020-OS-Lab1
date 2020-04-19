@@ -40,7 +40,7 @@ int main(void){
 	/*****example workload FIFO in textbook****/
 	Queue pq;
 	QueueInit(&pq);
-	process arr[5] = {{0,3,'A'},{ 2,6,'B'},{4,4,'C'},{6,5,'D'},{8,2,'E'}};
+	process arr[7] = {{0,3,'A'},{3,2,'B' },{4,4,'C'},{8,4,'D'},{10,5,'E'},{5,3,'F'},{12,4,'G'}};
 	int size;
 	size = sizeof(arr) / sizeof(process);
 	fifo_workload_table(size,arr);	
@@ -54,7 +54,7 @@ int main(void){
 	fifo(arr, &pq, total_time, size);
 	rr(arr, &pq, total_time, size);
 /****************MLFQ************************/	
-	process arr3[5] = {{0,3,'A'},{ 2,6,'B' },{ 4,4,'C'},{ 6,5,'D'},{ 8,2,'E'}};
+	process arr3[7] = {{0,3,'A'},{3,2,'B' },{4,4,'C'},{8,4,'D'},{10,5,'E'},{5,3,'F'},{12,4,'G'}};
 	total_time = 0;
 	for(int i = 0; i < size; i++){
 		total_time += arr3[i].arrive_time;
@@ -62,7 +62,7 @@ int main(void){
 	}
 	mlfq(arr3, total_time, size);
 
-	process arr4[3] = {{0,2,'A',100},{0,5,'B',200},{0,5,'C',40}};
+	process arr4[3] = {{0,5,'A',100},{0,6,'B',200},{0,5,'C',40}};
 	total_time = 0;
 	size = sizeof(arr4)/sizeof(process);
 	  for(int i = 0; i < size; i++){
