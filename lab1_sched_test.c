@@ -62,7 +62,7 @@ int main(void){
 	}
 	mlfq(arr3, total_time, size);
 
-	process arr4[3] = {{0,2,'A',100},{0,1,'B',200}};
+	process arr4[3] = {{0,2,'A',100},{0,5,'B',200},{0,5,'C',40}};
 	total_time = 0;
 	size = sizeof(arr4)/sizeof(process);
 	  for(int i = 0; i < size; i++){

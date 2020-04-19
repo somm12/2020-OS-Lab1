@@ -436,11 +436,13 @@ void stride(process arr[], Queue* pq,int time, int size) {
 	int g = 0;// index 3개의 프로세스를 pass value 비교해서 sort하기위한 배열의 index
 	int total_service_time = 0;
 	int k = 0;
+	int decrease_size = size;
 	process init[1] = {{0,0}};////make 구조체 배열 인덱스자리에 값을 할당하는데 쓰인 크기가 1 인 배열
 	int count_service_time = 0;
 	int signal = 0;//다른 프로세스가 수행하기 전 신호변수
 	process sort[time];
 	process running[1] = { { -2,-2 } }; // 실행 중인 프로세스를 보관한다
+	
 	for (int i = 0; i < time; i++) {					// total_time 만큼 횟수 반복
 		for (int j = 0; j < size; j++) {				// process_num  만큼 횟수 반복
 			if (arr[j].arrive_time == i) {				// arrive_time 이 현재 시간이랑 같은 프로세스가 있으면 
@@ -457,24 +459,25 @@ void stride(process arr[], Queue* pq,int time, int size) {
 			if (running[0].service_time != 0 && running[0].service_time != -2) {//이전 루프에서 service_time이 0이 안되었다
 				
 				running[0].arrive_time += running[0].priority;//arrivtime은 passvalue를 나타냄.priority는 stride값을 나타냄.
-				make[g] = running[0];
-				//Enqueue(pq, running[0]);
-				//
-				g++;
-			}}
-			   
-                 if (g == size||running[0].service_time == 0 ) {
-                     g = 0;
-                     bubble_sort(make,size);//***************
-                    for (int i=0; i < size; i++) {
-						if(make[0].service_time!=0)
-						{Enqueue(pq,make[i]);}
-							make[i] = init[0];
+				make[0] = running[0];
+				for(int i = 1; i < size;i++){
+					if(QIsEmpty(pq) == 0)
+					make[i] = Dequeue(pq);
+				}
+				printf("%d %d %d\n",make[0].arrive_time,make[1].arrive_time,make[2].arrive_time);
 
+				 bubble_sort(make,size);//***************
+				 printf("%d %d %d\n",make[0].arrive_time,make[1].arrive_time,make[2].arrive_time);
+                     for (int i=0; i < size; i++) {
+                         if(make[i].service_time!=0)
+                        {Enqueue(pq,make[i]);}
+                             make[i] = init[0];
                      }
 
-				 }
-
+				//Enqueue(pq, running[0]);
+				//
+				
+			}}
 		//전 프로세스가 서비스 타임이 0이 되었을 때 QPeek을 만나 함수가 끝나버려서 make[]안에 있는 프로세스들을enque
 		
 			running[0] = QPeek(pq);			// Queue Front 에 위치한 프로세스를 running 으로
@@ -490,8 +493,8 @@ void stride(process arr[], Queue* pq,int time, int size) {
 			if(count_service_time==size)
 				break; // 더 이상 Queue에 남은 프로세스가 없으면 종료
 		}
-	}
-
+	
+		}
 	int i = 0;
 	while(QIsEmpty(&output) == 0) {
 		sort[i] = Dequeue(&output);
@@ -533,6 +536,7 @@ void bubble_sort(process arr[], int size)    // 매개변수로 정렬할 배열
 				arr[j + 1].process_name = process_name;
        // 다음 요소로 보냄
 			}
+			
 		}
 	}
 }
