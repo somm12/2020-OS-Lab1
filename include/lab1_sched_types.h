@@ -59,5 +59,7 @@ void rrgraph(process arr[], int size, int time);
 void graph(process arr[], int size, int time);
 void fifo(process arr[], Queue * pq, int total_time, int process_num);
 void rr(process arr[], Queue * pq, int total_time, int process_num);
-void mlfq(process arr[], Queue * pq, int total_time, int process_num);
+void mlfq(process arr[], int total_time, int process_num);
+void stride(process arr[], Queue* pq,int time, int size);
+void bubble_sort(process arr[], int size);
 #endif /* LAB1_HEADER_H*/

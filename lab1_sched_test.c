@@ -42,6 +42,7 @@ int main(int argc, char *argv[]){
 	QueueInit(&pq);
 	process arr[5] = {{0,3,'A'},{2,6,'B' },{4,4,'C'},{6,5,'D'},{8,2,'E'}};
 
+	int size;
 	int process_num = sizeof(arr)/sizeof(process);
 	int total_time = 0;
 	
@@ -52,7 +53,17 @@ int main(int argc, char *argv[]){
 
 	fifo(arr, &pq, total_time, process_num);
 	rr(arr, &pq, total_time, process_num);
-	mlfq(arr, &pq, total_time, process_num);
+	mlfq(arr, total_time, process_num);
 
+	process arr4[3] = {{0,5,'A',100},{0,5,'B',200},{0,5,'C',40}};
+	total_time = 0;
+	size = sizeof(arr4)/sizeof(process);
+	for(int i = 0; i < size; i++){
+            total_time += arr4[i].arrive_time;
+            total_time += arr4[i].service_time;
+      	}
+	stride(arr4,&pq,total_time,size);
+
+	
 	return 0;
 }

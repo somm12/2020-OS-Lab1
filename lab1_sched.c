@@ -404,28 +404,23 @@ void mlfq(process arr[], int time, int size) {
 	rrgraph(sort, size, total_service_time);
 }
 
-
 /************************************************ STRIDE Implementation  **********************************************/
 
-void stride(process arr[], Queue* pq, int time, int size) {
+void stride(process arr[], Queue* pq,int time, int size) {
 	Queue output;
 	QueueInit(&output);
+	process make[size];//pass value 비교하여 원래 구조체 배열을 sort시, 담기위한 구조체 배열 make.
+	int g = 0;// index 3개의 프로세스를 pass value 비교해서 sort하기위한 배열의 index
 	int total_service_time = 0;
 	int k = 0;
+	process init[1] = {{0,0}};////make 구조체 배열 인덱스자리에 값을 할당하는데 쓰인 크기가 1 인 배열
+	int count_service_time = 0;
 	int signal = 0;//다른 프로세스가 수행하기 전 신호변수
-	process temp[size];
 	process sort[time];
 	process running[1] = { { -2,-2 } }; // 실행 중인 프로세스를 보관한다
-	process init[1] = { { -1,-1 } };	// 첫 프로세스가 실행하기 전까지 큐가 비어있지 않게 해주는 역할
-	Enqueue(pq, init[0]);
 	for (int i = 0; i < time; i++) {					// total_time 만큼 횟수 반복
 		for (int j = 0; j < size; j++) {				// process_num  만큼 횟수 반복
-			if (arr[j].arrive_time == i) {				// arrive_time 이 현재 시간이랑 같은 프로세스가 있으면
-				if (k == 0) {
-					if (QPeek(pq).arrive_time == -1) {
-						Dequeue(pq);					// Init 에서 Queue 에 넣어둔 초기 값을 제거 (일회성)
-					}
-				}
+			if (arr[j].arrive_time == i) {				// arrive_time 이 현재 시간이랑 같은 프로세스가 있으면 
 				Enqueue(pq, arr[j]);					// 프로세스를 pq 에 Enqueue
 			}
 		}
@@ -436,46 +431,41 @@ void stride(process arr[], Queue* pq, int time, int size) {
 			}
 		}
 		if (signal == -1) {		// 프로세스의 실행이 막 끝났을 때 또는 실행 중인 프로세스가 없을 때
-			if (running[0].service_time != 0 && running[0].service_time != -2) {// 이전 루프에서 service_time이 0이 안되었다면
-				Enqueue(pq, running[0]);
-				running[0].pass += running[0].stride; // pass 값을 stride 값 만큼 증가
-			}
-			
-			for (int l=0 ; l < size ; l++){ // pq 큐에 있는 값들로 배열을 만들어준다
-				temp[l] = QPeek(pq);
-				Dequeue(pq);
-				Enqueue(pq, temp[l]);
-			}
-			int min_pass = temp[4].pass;
-			for (int m=0 ; m < size ; m++){ // 가장 작은 pass값을 찾아준다
-				min_pass = ((min_pass < temp[m].pass) ? min_pass : temp[m].pass);
-			}
+			if (running[0].service_time != 0 && running[0].service_time != -2) {//이전 루프에서 service_time이 0이 안되었다
+				
+				running[0].arrive_time += running[0].priority;//arrivtime은 passvalue를 나타냄.priority는 stride값을 나타냄.
+				printf("%c 's stride is %d\n", running[0].name, running[0].arrive_time);
+				make[g] = running[0];
+				//Enqueue(pq, running[0]);
+				//
+				g++;
+			}}
+			   
+                 if (g == size||running[0].service_time == 0 ) {
+                     g = 0;
+                     bubble_sort(make,size);//***************
+                    for (int i=0; i < size; i++) {
+						if(make[i].service_time!=0)
+						{Enqueue(pq,make[i]);}
+							make[i] = init[0];
 
-			int min_name = temp[4].name;
-			for (int o = 0; o <size ; o++){
-				if (temp[o].pass == min_pass){
-					min_name = ((min_name < temp[o].name) ? min_name : temp[o].name);
-				}
-			}
+                     }
 
-			for (int n=0 ; n < size ; n++){ // running[0] = QPeek(pq)
-				if (QPeek(pq).name == min_name){ // Dequeue(pq) 부분을 다음과 같이 변경
-					running[0] = QPeek(pq);
-					break;
-				}
-				else{
-					Enqueue(pq, QPeek(pq));
-					Dequeue(pq);
-				}
-			}
-			Enqueue(&output, running[0]);		// running 에 넣어준 프로세스를 output 으로 Enqueue
-			min_name = temp[4].pass;			// min name 초기화
-		}
+				 }
+
+		//전 프로세스가 서비스 타임이 0이 되었을 때 QPeek을 만나 함수가 끝나버려서 make[]안에 있는 프로세스들을 enqueue
+			running[0] = QPeek(pq);			// Queue Front 에 위치한 프로세스를 running 으로
+			Dequeue(pq);					// 옮긴 프로세스를 Dequeue
+			Enqueue(&output, running[0]);
+				// running 에 넣어준 프로세스를 output 으로 Enqueue
+		
 		running[0].service_time -= 1;		// running의 service_time 감소
 		signal = -1;		// running의 signal 초기화
 
 		if(QIsEmpty(pq) == 1 && running[0].service_time == 0) {
-			break; // 더 이상 Queue에 남은 프로세스가 없으면 종료
+			count_service_time++;
+			if(count_service_time==size)
+				break; // 더 이상 Queue에 남은 프로세스가 없으면 종료
 		}
 	}
 
@@ -488,4 +478,38 @@ void stride(process arr[], Queue* pq, int time, int size) {
 		total_service_time += arr[i].service_time;
 	}
 	rrgraph(sort, size, total_service_time);
+}
+
+void bubble_sort(process arr[], int size)    // 매개변수로 정렬할 배열과 요소의 개수를 받음
+{
+	int passvalue;
+	int stride;
+	int servicetime;
+	char process_name;
+
+	for (int i = 0; i < size; i++)    // 요소의 개수만큼 반복
+	{
+		for (int j = 0; j < size - 1; j++)   // 요소의 개수 - 1만큼 반복
+		{
+			if (arr[j].arrive_time > arr[j + 1].arrive_time)          // 현재 요소의 값과 다음 요소의 값을 비교하여
+			{                                 // 큰 값을
+				passvalue = arr[j].arrive_time;
+				stride= arr[j].priority;
+				servicetime = arr[j].service_time;
+				process_name = arr[j].name;
+
+
+				arr[j].arrive_time = arr[j + 1].arrive_time;
+				arr[j].priority = arr[j + 1].priority;
+				arr[j].service_time = arr[j + 1].service_time;
+				arr[j].name = arr[j+1].name;
+
+				arr[j + 1].arrive_time = passvalue;
+				arr[j + 1].priority = stride;
+				arr[j + 1].service_time = servicetime;
+				arr[j + 1].name = process_name;
+       // 다음 요소로 보냄
+			}
+		}
+	}
 }
