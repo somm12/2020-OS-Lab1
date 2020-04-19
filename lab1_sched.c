@@ -273,7 +273,8 @@ void rr(process arr[], Queue* pq, int time, int size) {
 		signal = -1;						// running의 signal 초기화
 
 		if(QIsEmpty(pq) == 1 && running[0].service_time == 0) {
-			break;							// 더 이상 Queue에 남은 프로세스가 없으면 종료
+			count_service_time++;				   // 프로세스가 종료 될 때마다 count 증가
+			if (count_service_time == size) break; // 모든 프로세스가 종료되면 break
 		}
 	}
 
@@ -282,6 +283,7 @@ void rr(process arr[], Queue* pq, int time, int size) {
 		sort[i] = Dequeue(&output);
 		i++;
 	}
+
 	graph(sort, size, total_service_time);	// graph 함수 호출
 }
 
@@ -324,8 +326,8 @@ void mlfq(process arr[], int time, int size) {
 			}
 		}
 		if (k == 0) { // (일회성)
-			if (QPeek(&P1).arrive_time == i) {	// Queue 의 Front 에 위치한 프로세스의 arrive_time 이 현재 시간과 같다면
-				signal = -1;					// 다음 if문을 수행하도록 signal 을 -1로 초기화해준다
+			if (QPeek(&P1).arrive_time == i) {			// Queue 의 Front 에 위치한 프로세스의 arrive_time 이 현재 시간과 같다면
+				signal = -1;							// 다음 if문을 수행하도록 signal 을 -1로 초기화해준다
 				k = 1;
 			}
 		}
@@ -388,18 +390,18 @@ void mlfq(process arr[], int time, int size) {
 
 
 		if(QIsEmpty(&P1) && QIsEmpty(&P2) && QIsEmpty(&P3) && QIsEmpty(&P4)  == 1 && running[0].service_time == 0) {
-			count_service_time++;
-			if (count_service_time == size) break; // 더 이상 Queue에 남은 프로세스가 없으면 종료
+			count_service_time++;				   // 프로세스가 종료 될 때마다 count 증가
+			if (count_service_time == size) break; // 모든 프로세스가 종료되면 break
 		}
 	}
 
 	int i = 0;
-	while(QIsEmpty(&output) == 0) {
+	while(QIsEmpty(&output) == 0) {         // output Queue 에 있는 프로세스 값들을 출력하기 위해 배열로 바꾸는 과정
 		sort[i] = Dequeue(&output);
 		i++;
 	}
 
-	graph(sort, size, total_service_time);
+	graph(sort, size, total_service_time); // graph 함수 호출
 }
 
 /************************************************ STRIDE Implementation  **********************************************/
