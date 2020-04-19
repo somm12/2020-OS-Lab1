@@ -90,49 +90,53 @@ Data QPeek(Queue * pq)
 
 /************************************************ FIFO Graph Implementation *********************************************/
 
-void fifo_graph(process arr[], int size, int time) {
-   int sum = 0;
-   char temp[5] = { 'A','B','C','D','E' };
-   for (int j = 0; j <= time; j++){ // 20 = sum of the service time
+void fifo_graph(process arr[], int size,int total_service_time) {// FIFO scheduling방식을 출력해주는 함수.
+	 int sum = 0;// 출력시 공백문자를 출력하기 위해 사용되는 변수
+   char temp[100];// 프로세스 이름을 담음
+   for(int i = 0; i < size; i++){
+		temp[i] = arr[i].name;
+   }
+   for (int j = -1; j <= total_service_time; j++){ // 총 수행시간만큼 시간축을 차례로 출력하기 위한 for반복문.
       if (j >  0){
-	     if (j > 10){
-			printf("%d ", j);
+	     if (j > 9){
+		    printf("%d ", j);
 		 }
 		 else {
 	        printf(" %d ", j);
 		 }
 	  }
 	  else{
-         printf("   ");
+         printf("  ");
       }
    }
-   printf("\n");
 
-   for (int i = 0; i < size; i++) {
+   printf("\n");
+   for (int i = 0; i < size; i++) {//그래프 모양을 위해서'|' 문자와 블록 모양 문자를 이용하여 프로세스 수행결과 출력 
       if (i < 1)
       {
          printf("%c", temp[i]);
-         printf("|");
+         printf(" | ");
+
       }
       for (int k = 0; k < arr[i].service_time; k++) {
-         printf("■■ ");
+         printf("■■ ");//
 
       }
       printf("\n");
-      if (i < 4)
+      if (i < size -1)
       {
-         printf("%c", temp[i+1]);
-         printf("|");
+         printf("%c", temp[i + 1]);// B|    C|   D|  모양을 출력
+         printf(" | ");
       }
-      sum = sum + arr[i].service_time;
-      for (int j = 0; j < sum; j++) {
+      sum = sum + arr[i].service_time;// 공백문자 수을 계산
+      for (int j = 0; j < sum; j++) {// sum만큼 출력
          printf("   ");
+
       }
    }
-   printf("\n");
-   return;
-}
+   printf("\n");	
 
+}
 /************************************************ Graph Implementation *********************************************/
 
 void graph(process arr[], int size, int time) {
@@ -143,7 +147,7 @@ void graph(process arr[], int size, int time) {
    
    for (int j = 0; j <= time; j++){ // 20 = sum of the service time
       if (j >  0){ 
-         if (j > 10){
+         if (j > 9){
             printf("%d ", j); 
          }
          else {
@@ -151,7 +155,7 @@ void graph(process arr[], int size, int time) {
          }
       }   
       else{
-         printf("   ");
+         printf("    ");
       }   
    }   
    printf("\n");
@@ -169,61 +173,73 @@ void graph(process arr[], int size, int time) {
         }
         printf("\n");
     }
+	printf("\n");
     return;
 }
 
 /************************************************ FIFO Implementation  **********************************************/
 
-void fifo(process arr[], Queue* pq, int time, int size) {
-	Queue output;
-	QueueInit(&output);
-	int total_service_time = 0;
+void fifo(process arr[], Queue* pq, int total_time, int size) {//main함수에서 할당한 각 프로세스의 워크로드를 구조체 배열로, 프로세스 갯수, 총 시간, 큐를 인자로 둠.
+	Queue output;// 실행 결과 출력 내용을 담을 Queue
+	QueueInit(&output);// 초기화
 	int k = 0;
-	process sort[time];
-	process running[1] = { { -2,-2 } }; // 실행 중인 프로세스를 보관한다
-	process init[1] = { { -1,-1 } };	// 첫 프로세스가 실행하기 전까지 큐가 비어있지 않게 해주는 역할
+	process running[1] = { { -2,-2,' ' } };//구조체 배열 선언.arrivtime,servitime,프로세스 이름을 멤버로 가짐.
+	process init[1] = { { -1,-1,' ' } };// 첫 프로세스의 도착시간이 0이 아닐 때 140번째 줄에서 Qpeek를 만나 프로그램이 종료되지 않기 위해 미리 -1로 큐에 값을 할당.
 	Enqueue(pq, init[0]);
-	for (int i = 0; i < time; i++) {					// total_time 만큼 횟수 반복 
-		for (int j = 0; j < size; j++) {				// process_num  만큼 횟수 반복
-			if (arr[j].arrive_time == i) {				// arrive_time 이 현재 시간이랑 같은 프로세스가 있으면
+	for (int i = 0; i < total_time; i++) {		// i = 전체 프로세스가 수행하는 데 걸리는 시간(시간 변수)
+
+		for (int j = 0; j < size; j++) {	// j = 프로세스 갯수
+				if (arr[j].arrive_time == i) {		// 프로세스가 도착하는 시간과 흘러가는 시간이 같을 때(반복문으로 인해 가장 빨리 도착한 프로세스가 Enqueue됨)
 				if (k == 0) {
-					if (QPeek(pq).arrive_time == -1){
-						Dequeue(pq);					// Init 에서 Queue 에 넣어둔 초기 값을 제거 (일회성)
+					if (QPeek(pq).arrive_time == -1) {//처음 시작하는 프로세스가 enqueue될 때 위에서 미리 할당한 초기값 {-1,-1} 디큐하기위함
+
+						Dequeue(pq);
 					}
 				}
-				Enqueue(pq, arr[j]);					// 프로세스를 pq 에 Enqueue
+				Enqueue(pq, arr[j]);//인자로 받아온 구조체 배열을  해당 인덱스에 맞춰 프로세스를 큐에 할당.
+			
+				// enqueue the process
+				
 			}
 		}
-		if(k==0){ // (일회성)
-			if (QPeek(pq).arrive_time == i) {	// Queue 의 Front 에 위치한 프로세스의 arrive_time 이 현재 시간과 같다면
-				running[0].arrive_time = -1;	// running 의 arrive_time 을 -1로 초기화 -> 다음 if문 수행 가능
-				k = 1;
-			}	
-		}
-		if (running[0].arrive_time == -1) {		// 프로세스의 실행이 막 끝났을 때 또는 실행 중인 프로세스가 없을 때
-			running[0] = QPeek(pq);				// Queue Front 에 위치한 프로세스를 running 으로
-			Dequeue(pq);						// 옮긴 프로세스를 Dequeue
-			Enqueue(&output, running[0]);		// running 에 넣어준 프로세스를 output 으로 Enqueue
-		}
-			running[0].service_time -= 1;		// running의 service_time 감소
-			if (running[0].service_time == 0) {	// service_time 이 0이 되면
-				running[0].arrive_time = -1;	// running의 arrive_time 초기화
-			}
-		if (QIsEmpty(pq) == 1 && running[0].service_time == 0){
-			break; // 더 이상 Queue에 남은 프로세스가 없으면 종료
+		if(k==0){// 수행하고 있지 않은 상태여부를 보는 변수 running[0].arrive_time 값을 할당하기 위함.
+			// 첫 프로세스가 시작하고나서 부터는 필요하지 않은 조건문.
+			if (QPeek(pq).arrive_time == i) {
+			running[0].arrive_time = -1;//프로세스가 수행하는 상태가 아닐 때 -1 값을 대입하고. 첫 프로세스 시작전 값을 할당함.
+			k = 1;
 		}
 	}
 	
+		if (running[0].arrive_time == -1) {// 어떤  프로세스도 수행하고 있는 상태가 아닐 때 수행 시작을 위해 QPeek를하고 첫번째 프로세스를 할당.
+			
+			running[0] = QPeek(pq);	
+			Dequeue(pq);// 그 다음 프로세스 수행을 위해 맨 앞에 있는 먼저 수행하는 프로세스를 빼줌
+			Enqueue(&output, running[0]);      //수행한 프로세스를 출력하기 위해 output 큐에 인큐.
+			
+		}
+			running[0].service_time -= 1;		// 프로세스가 1초 수행 했으므로 service time 1초 감소
+			if (running[0].service_time == 0) {	// 프로세스가 수행을 끝냈을 때
+				running[0].arrive_time = -1;	// 다시 프로세스 수행이 끝났으므로 -1 값을 대임하여 수행상태가 아님을 명시.
+			}
+		
+		if(QIsEmpty(pq) == 1 && running[0].service_time == 0)break;// 만약 모든 프로세스의 수행이 끝났을 경우, 큐가 비었을 때와 마지막 프로세스의 수행시간이 0 이됬을 때 break
+	}
 	int i = 0;
-	while (QIsEmpty(&output)==0) {
-		sort[i] = Dequeue(&output);
+
+	while(QIsEmpty(&output)==0) {// output큐에 담아 놓았던 모든 프로세스의 수행 기록을 구조체 배열로 저장
+		arr[i] = Dequeue(&output);
 		i++;	
 	}
-	for (int i = 0; i < size; i++) {
-		printf("%d %d\n", sort[i].arrive_time, sort[i].service_time);
-		total_service_time += sort[i].service_time;
+	
+	int total_service_time = 0;
+	for(int i = 0; i < size; i++) {// 총 수행 시간을 인자로 값을 계산하여 출력함수 인자로 쓰임
+		total_service_time += arr[i].service_time;
+
 	}
-	fifo_graph(sort, size, total_service_time);
+	
+	fifo_graph(arr, size, total_service_time);//그래프 출력 함수를 호출
+	////call funtion to draw the FIFO graph
+
 }
 
 /************************************************ RR Implementation  **********************************************/
@@ -232,6 +248,7 @@ void rr(process arr[], Queue* pq, int time, int size) {
 	Queue output;						// 실행하고 있는 프로세스를 저장해두는 큐
 	QueueInit(&output);
 	int total_service_time = 0;			// 전체 실행 시간
+	int count_service_time = 0;			// 프로그램 종료를 판단하는 변수
 	int k = 0;							// 전체 루프에서 단 한 번만 함수를 실행시키기 위한 변수
 	int signal = 0;						// 프로세스가 실행 중이지 않음을 알려주는 변수
 	process sort[time];					// 출력을 위해 Queue 에 있는  결과값을 저장해두는 배열
@@ -273,8 +290,7 @@ void rr(process arr[], Queue* pq, int time, int size) {
 		signal = -1;						// running의 signal 초기화
 
 		if(QIsEmpty(pq) == 1 && running[0].service_time == 0) {
-			count_service_time++;				   // 프로세스가 종료 될 때마다 count 증가
-			if (count_service_time == size) break; // 모든 프로세스가 종료되면 break
+			break; // 모든 프로세스가 종료되면 break
 		}
 	}
 
@@ -302,12 +318,13 @@ void mlfq(process arr[], int time, int size) {
 	Queue output;						// 실행하고 있는 프로세스를 저장해두는 큐
 	QueueInit(&output);
 	int total_service_time = 0;			// 전체 실행 시간
+	int count_service_time = 0;			// 프로그램 종료를 판단하는 변수
 	int k = 0;							// 전체 루프에서 단 한 번만 함수를 실행시키기 위한 변수
 	int signal = 0;						// 프로세스가 실행 중이지 않음을 알려주는 변수
 	process sort[time];					// 출력을 위해 Queue 에 있는  결과값을 저장해두는 배열
 	process running[1] = { { -2,-2 } }; // 실행 중인 프로세스를 보관하기 위한 구조체 배열
 	process init[1] = { { -1,-1 } };	// 첫 프로세스가 실행하기 전까지 큐가 비어있지 않게 해주기 위한 구조체 배열
-	Enqueue(pq, init[0]);
+	Enqueue(&P1, init[0]);
 	
 	for (int i = 0; i < size; i++) {	// 전체 실행 시간 total_service_time 계산
 		total_service_time += arr[i].service_time;
@@ -390,8 +407,7 @@ void mlfq(process arr[], int time, int size) {
 
 
 		if(QIsEmpty(&P1) && QIsEmpty(&P2) && QIsEmpty(&P3) && QIsEmpty(&P4)  == 1 && running[0].service_time == 0) {
-			count_service_time++;				   // 프로세스가 종료 될 때마다 count 증가
-			if (count_service_time == size) break; // 모든 프로세스가 종료되면 break
+			break; // 모든 프로세스가 종료되면 break
 		}
 	}
 
