@@ -101,7 +101,7 @@ Data QPeek(Queue * pq)
 void fifo_workload_table(int size, process arr[]){
 
 	printf("\n");
-	printf("=======Workload in FIFO======\n");
+	printf("========Workload======\n");
 	printf("arrive time | service time\n");
 	printf("----------------------------\n");
 	for (int i = 0; i < size; i++) {
@@ -208,7 +208,7 @@ void fifograph(process arr[], int size,int total_service_time) {// FIFO scheduli
 
       }
       printf("\n");
-      if (i < 4)
+      if (i < size -1)
       {
          printf("%c", temp[i + 1]);// B|    C|   D|  모양을 출력
          printf(" | ");
