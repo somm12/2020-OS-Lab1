@@ -521,4 +521,3 @@ void bubble_sort(process arr[], int size)    // 매개변수로 정렬할 배열
 		}
 	}
 }
-

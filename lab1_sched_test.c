@@ -31,46 +31,42 @@
 
 #include "include/lab1_sched_types.h"
 
-/*
- * you need to implement scheduler simlator test code.
- *
- */
+
 
 int main(void){
-	/*****example workload FIFO in textbook****/
-	Queue pq;
-	QueueInit(&pq);
-	process arr[7] = {{0,3,'A'},{3,2,'B' },{4,4,'C'},{8,4,'D'},{10,5,'E'},{5,3,'F'},{12,4,'G'}};
-	int size;
-	size = sizeof(arr) / sizeof(process);
-	fifo_workload_table(size,arr);	
 
-	int total_time = 0;
+	Queue pq;													//각 fifo, rr, mlfq 방식에서 사용할 Queue 선언
+	QueueInit(&pq);												//Queue 초기화
+
+	process arr1[5] = {{0,3,'A'},{2,6,'B'},{4,4,'C'},{6,5,'D'},{8,2,'E'}};// 각 스케줄링 함수에 인자로 대입할 구조체 배열 초기화(수업시간에 한 워크로드예제)
+	int size;
+	size = sizeof(arr1) / sizeof(process);						//총 프로세스 갯수		
+	fifo_workload_table(size, arr1);							//workload table 함수 호출
+	int total_time = 0;										
 
 	for (int i = 0; i<size; i++) {
-		total_time += arr[i].arrive_time;
-		total_time += arr[i].service_time;
+		total_time += arr1[i].arrive_time;						//각 프로세스가 수행하는 전체 시간 연산
+		total_time += arr1[i].service_time;
 	}
-	fifo(arr, &pq, total_time, size);
-	rr(arr, &pq, total_time, size);
-/****************MLFQ************************/	
-	process arr3[7] = {{0,3,'A'},{3,2,'B' },{4,4,'C'},{8,4,'D'},{10,5,'E'},{5,3,'F'},{12,4,'G'}};
-	total_time = 0;
+	fifo(arr1, &pq, total_time, size);							//fifo 함수 호출
+
+	rr(arr1, &pq, total_time, size);								//rr 함수 호출
+	
+	mlfq(arr1, total_time, size);								//mlfq 함수 호출
+	
+	process arr2[3] = {{0,5,'A',100},{0,6,'B',50},{0,5,'C',250}};// 주어진 티켓 수 100, 50 ,250을 계산해서  pass value, servictime, process name, stride값으로 할당.
+	
+	size = sizeof(arr2)/sizeof(process);						//stride 스케줄링에 필요한 구조체 배열 크기(프로세스 갯수)
+	
 	for(int i = 0; i < size; i++){
-		total_time += arr3[i].arrive_time;
-		total_time += arr3[i].service_time;
+		arr2[i].priority = 10000/arr2[i].priority;				//각 프로세스의 stride를 계산한 값을 stride 멤버로 대입(priority자리에 stride가 들어감)
 	}
-	mlfq(arr3, total_time, size);
-
-	process arr4[3] = {{0,5,'A',100},{0,6,'B',200},{0,5,'C',40}};
 	total_time = 0;
-	size = sizeof(arr4)/sizeof(process);
 	  for(int i = 0; i < size; i++){
-          total_time += arr4[i].arrive_time;
-          total_time += arr4[i].service_time;
-      }
-	stride(arr4,&pq,total_time,size);
-
-
+          total_time += arr2[i].arrive_time;					//stride에서 수행할 프로세스들의 총 수행시간 계산
+		  total_time += arr2[i].service_time;
+      }	
+				
+	stride(arr2,&pq,total_time,size);							//stride함수 호출
 	return 0;
 }
