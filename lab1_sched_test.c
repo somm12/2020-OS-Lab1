@@ -45,7 +45,7 @@ int main(void){
 	int total_time = 0;										
 
 	for (int i = 0; i<size; i++) {
-		total_time += arr1[i].arrive_time;						//각 프로세스가 수행하는 전체 시간 연산
+		total_time += arr1[i].arrive_time;						//각 프로세스가 수행하는 전체 시간을 대략계산
 		total_time += arr1[i].service_time;
 	}
 	fifo(arr1, &pq, total_time, size);							//fifo 함수 호출
