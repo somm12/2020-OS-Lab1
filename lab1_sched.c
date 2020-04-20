@@ -115,7 +115,7 @@ void fifo_graph(process arr[], int size,int total_service_time) {// FIFO schedul
       if (i < 1)
       {
          printf("%c", temp[i]);
-         printf(" | ");
+         printf("|");
 
       }
       for (int k = 0; k < arr[i].service_time; k++) {
@@ -126,7 +126,7 @@ void fifo_graph(process arr[], int size,int total_service_time) {// FIFO schedul
       if (i < size -1)
       {
          printf("%c", temp[i + 1]);// B|    C|   D|  모양을 출력
-         printf(" | ");
+         printf("|");
       }
       sum = sum + arr[i].service_time;// 공백문자 수을 계산
       for (int j = 0; j < sum; j++) {// sum만큼 출력
@@ -141,14 +141,11 @@ void fifo_graph(process arr[], int size,int total_service_time) {// FIFO schedul
 
 void graph(process arr[], int size, int time) {
    int sum = 0;
-
-
-   /***************************** x축 그리기 *****************************/
    
-   for (int j = 0; j <= time; j++){ // 20 = sum of the service time
+   for (int j = 0; j <= time; j++){ // 그래프에 x축(시간)을 그리는 과정
       if (j >  0){ 
          if (j > 9){
-            printf("%d ", j); 
+            printf("%d ", j);		// 한 자리 수일 때와 두 자리 수일 때 간격을 조정
          }
          else {
             printf(" %d ", j); 
@@ -159,17 +156,15 @@ void graph(process arr[], int size, int time) {
       }   
    }   
    printf("\n");
-
-   /*********************************************************************/
    
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {	 // 그래프에 y축(프로세스 이름)을 그리는 과정
         printf("%c", 65 + i); 
         printf("|");
-        for (int j = 0; j < time ; j++){
+        for (int j = 0; j < time ; j++){ // J초 일 때 프로세스가 run 상태이면
             if (arr[j].name == 65 + i){ 
-                printf("■■ ");
+                printf("■■ ");			 // 네모 박스를 출력하고
             }
-            else printf("   ");
+            else printf("   ");			 // 그렇지 않으면 공백으로 패딩
         }
         printf("\n");
     }
@@ -421,78 +416,75 @@ void mlfq(process arr[], int time, int size) {
 }
 
 /************************************************ STRIDE Implementation  **********************************************/
-
-void stride(process arr[], Queue* pq,int time, int size) {
-	Queue output;
+// fifo 함수를 기반으로 구현한 stride 함수.
+void stride(process arr[], Queue* pq,int time, int size) {//각 프로세스의 워크로드를 담은 구조체 배열, 프로세스 수행에 사용되는 큐, 전체 수행시간, 프로세스 갯수를 인자로 받음.
+	Queue output;	   //프로세스 수행 결과를 출력하기 위해 사용할 output 큐
 	QueueInit(&output);
-	process make[size];//pass value 비교하여 원래 구조체 배열을 sort시, 담기위한 구조체 배열 make.
-	int g = 0;// index 3개의 프로세스를 pass value 비교해서 sort하기위한 배열의 index
-	int total_service_time = 0;
+	process make[size];//pass value 비교하여 원래 구조체 배열을 sort시,sort 한 결과를 담기위한 구조체 배열 make.
+	int total_service_time = 0;//전체 수행시간을 계산하여 담을 변수.
 	int k = 0;
-	int decrease_size = size;
-	process init[1] = {{0,0}};////make 구조체 배열 인덱스자리에 값을 할당하는데 쓰인 크기가 1 인 배열
-	int count_service_time = 0;
+	process init[1] = {{0,0}};////make 구조체 배열 인덱스 자리에 값을 할당하는데 쓰기 위함. 크기가 1 인 구조체 배열
+	int count_service_time = 0; // 모든 프로세스 수행이 다 되었는지 확인하기 위한 변수.
 	int signal = 0;//다른 프로세스가 수행하기 전 신호변수
-	process sort[time];
-	process running[1] = { { -2,-2 } }; // 실행 중인 프로세스를 보관한다
+	process sort[time];// 프로세스들이 수행한 순서를 차례대로 담은 sort 구조체 배열. 이 배열을 이용하여 출력함수 인자로 전달.
+	process running[1] = { { -2,-2 } }; // 실행 중인 프로세스를 보관하기 위한 구조체 배열 -2로 초기화 해놓음.
 	
 	for (int i = 0; i < time; i++) {					// total_time 만큼 횟수 반복
 		for (int j = 0; j < size; j++) {				// process_num  만큼 횟수 반복
 			if (arr[j].arrive_time == i) {				// arrive_time 이 현재 시간이랑 같은 프로세스가 있으면 
-				Enqueue(pq, arr[j]);					// 프로세스를 pq 에 Enqueue
+				Enqueue(pq, arr[j]);					// 프로세스를 pq 에 Enqueue -> 모든 프로세스의 pass value가 0으로 시작=> 모두 한번에 Enqueue
 			}
 		}
-		if (k == 0) { // (일회성)
+		if (k == 0) { // (일회성) 프로세스 수행 첫 시작 신호
 			if (QPeek(pq).arrive_time == i) {	// Queue 의 Front 에 위치한 프로세스의 arrive_time 이 현재 시간과 같다면
 				signal = -1;	// running 의 signal 을 -1로 초기화 -> 다음 if문 수행 가능
 				k = 1;
 			}
 		}
 		if (signal == -1) {		// 프로세스의 실행이 막 끝났을 때 또는 실행 중인 프로세스가 없을 때
-			if (running[0].service_time != 0 && running[0].service_time != -2) {//이전 루프에서 service_time이 0이 안되었다
+			if (running[0].service_time != 0 && running[0].service_time != -2) {//이전 루프에서 service_time이 0이 안되었다면 또는 아직 수행하지 않아서 -2 값이 아니라면
 				
-				running[0].arrive_time += running[0].priority;//arrivtime은 passvalue를 나타냄.priority는 stride값을 나타냄.
-				make[0] = running[0];
-				for(int i = 1; i < size;i++){
-					if(QIsEmpty(pq) == 0)
-					make[i] = Dequeue(pq);
+				running[0].arrive_time += running[0].priority;//arrivtime은 passvalue를 나타냄.priority는 stride값을 나타냄.**** 프로세스 수행이 끝나고 pass value update.
+				make[0] = running[0];//update된 pass value값을 가진 프로세스를 make 구조체 배열에 대입
+				for(int i = 1; i < size;i++){//새로 업데이트 된 pass value 값을 바로바로 비교하기 위해 큐를 다 비우고 구조체 배열에 프로세스들을 담는다.
+					if(QIsEmpty(pq) == 0) make[i] = Dequeue(pq);
 				}
-				printf("%d %d %d\n",make[0].arrive_time,make[1].arrive_time,make[2].arrive_time);
-				bubble_sort(make,size);//***************
-				printf("%d %d %d\n",make[0].arrive_time,make[1].arrive_time,make[2].arrive_time);
-                for (int i=0; i < size; i++) {
-					if(make[i].service_time!=0) Enqueue(pq,make[i]);
-                    make[i] = init[0];
-				}
+
+				 bubble_sort(make,size);//각 프로세스들의 pass value를 비교하여 작은 순서대로 배열을 정렬해주는 함수 호출.
+                     for (int i=0; i < size; i++) {//정렬된 make구조체 배열을 순서대로 인큐한다.
+                         if(make[i].service_time!=0){// 전에 할당된 0을 제외하고 큐에 넣어야 하므로 조건문 생성.
+							Enqueue(pq,make[i]);
+						 }
+                         make[i] = init[0];// 처음에 make배열에 프로세스들이 할당되고 난 이후 값이 남아있기 때문에 그후 0으로 할당 
+                     }
 			}
 		}
-		//전 프로세스가 서비스 타임이 0이 되었을 때 QPeek을 만나 함수가 끝나버려서 make[]안에 있는 프로세스들을enque
 		
-		running[0] = QPeek(pq);			// Queue Front 에 위치한 프로세스를 running 으로
-		Dequeue(pq);					// 옮긴 프로세스를 Dequeue
-		Enqueue(&output, running[0]);
-				// running 에 넣어준 프로세스를 output 으로 Enqueue
+			running[0] = QPeek(pq);			// Queue Front 에 위치한(먼저 수행할) 프로세스를 running 으로 할당
+			Dequeue(pq);					// 옮긴 프로세스를 Dequeue
+			Enqueue(&output, running[0]);// 결과 출력을 위해 수행한 프로세스를 output큐에 Enqueue.
 		
-		running[0].service_time -= 1;		// running의 service_time 감소
-		signal = -1;		// running의 signal 초기화
+		running[0].service_time -= 1;		// running에 들어가 있는 방금 수행한 프로세스의 service_time 감소
+		signal = -1;		//  signal 초기화
 
-		if(QIsEmpty(pq) == 1 && running[0].service_time == 0) {
+		if(QIsEmpty(pq) == 1 && running[0].service_time == 0) {//모든 프로세스의 수행이 끝나고 큐가 비었을 때 반복문을 멈춤.
 			count_service_time++;
-			if (count_service_time==size) break; // 더 이상 Queue에 남은 프로세스가 없으면 종료
+			if(count_service_time==size)
+				break;
 		}
 	
-	}
+		}
 	int i = 0;
 	while(QIsEmpty(&output) == 0) {
-		sort[i] = Dequeue(&output);
+		sort[i] = Dequeue(&output);// 모든 프로세스의 수행 결과를 sort 구조체 배열에 할당
 		i++;
 	}
 	for (int i = 0; i < size; i++) {
 		total_service_time += arr[i].service_time;
 	}
-	graph(sort, size, total_service_time);
+	graph(sort, size, total_service_time);// 전체 시간을 위에서 계산 후 stride 스케줄링 결과를 출력할 함수 호출.
 }
-
+					
 
 void bubble_sort(process arr[], int size)    // 매개변수로 정렬할 배열과 요소의 개수를 받음
 {
@@ -524,6 +516,7 @@ void bubble_sort(process arr[], int size)    // 매개변수로 정렬할 배열
 				arr[j + 1].name = process_name;
        // 다음 요소로 보냄
 			}
+			
 		}
 	}
 }
