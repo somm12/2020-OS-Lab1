@@ -492,7 +492,7 @@ void mlfq_4(process arr[], int time, int size) {
     QueueInit(&P4);
 	Queue output;						// 실행하고 있는 프로세스를 저장해두는 큐
 	QueueInit(&output);
-	int time_slice;
+	int time_slice = 0;
 	int total_service_time = 0;			// 전체 실행 시간
 	int count_service_time = 0;			// 프로그램 종료를 판단하는 변수
 	int k = 0;							// 전체 루프에서 단 한 번만 함수를 실행시키기 위한 변수
