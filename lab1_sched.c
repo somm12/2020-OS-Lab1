@@ -90,7 +90,7 @@ Data QPeek(Queue * pq)
 	if (QIsEmpty(pq))
 	{
 		printf("Queue Memory Error!");
-		 printf("location is dequeue");
+		 printf("location is QPeek");
 
 		exit(-1);
 	}
@@ -313,7 +313,7 @@ void rr_4(process arr[], Queue* pq, int time, int size) {
 				Dequeue(pq);
 				time_slice = 0;
 			}
-			running[0] = QPeek(pq);			// 옮긴 프로세스를 Dequeue
+			if (time_slice == 0&&QIsEmpty(pq)==0)running[0] = QPeek(pq);// 첫번째 시작하는 프로세스가 time slice을 다할 때까지 다음 값을 받아오지 않고 마지막 프로세스가 수행을 마치면 더이상 값을 불러오지 않는다.
 			Enqueue(&output, running[0]);		// running 에 넣어준 프로세스를 output 으로 Enqueue
 		}
 		running[0].service_time -= 1;

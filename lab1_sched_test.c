@@ -37,8 +37,8 @@ int main(void){
 
 	Queue pq; 
 	QueueInit(&pq);
-//	process arr1[5] = {{0,3,'A'},{2,6,'B'},{4,4,'C'},{6,5,'D'},{8,2,'E'}};
-	process arr1[7] = {{0,4,'A'},{3,2,'B'},{4,3,'C'},{8,2,'D'},{10,4,'E'},{5,3,'F'},{12,1,'G'}};
+	process arr1[5] = {{0,3,'A'},{2,6,'B'},{4,4,'C'},{6,5,'D'},{8,2,'E'}};
+//	process arr1[7] = {{0,4,'A'},{3,2,'B'},{4,3,'C'},{8,2,'D'},{10,4,'E'},{5,3,'F'},{12,1,'G'}};
 //	process arr1[3] = {{0,7,'A'},{3,5,'B'},{6,8,'C'}};
 
 	int size;
@@ -54,7 +54,7 @@ int main(void){
     fifo(arr1, &pq, total_time1, process_num1);
 	printf("\n");
     printf("============================  RR  =============================\n");
-    rr(arr1, &pq, total_time1, process_num1);
+    rr_4(arr1, &pq, total_time1, process_num1);
 	printf("\n");
     printf("============================ MLFQ =============================\n");
     mlfq(arr1, total_time1, process_num1);
