@@ -172,6 +172,39 @@ void graph(process arr[], int size, int time) {
     return;
 }
 
+/************************************************ FIFO Workload Table **********************************************/
+
+void fifo_workload_table(int size, process arr[]){
+
+	printf("\n");
+	printf("==========Workload==========\n");
+	printf("arrive time | service time\n");
+	printf("----------------------------\n");
+	for (int i = 0; i < size; i++) {
+		printf("%c",65+i);
+		if(arr[i].arrive_time >= 10)
+			printf("         %d |  %d          \n",arr[i].arrive_time,arr[i].service_time);
+		else
+		{printf("         %d  |  %d          \n",arr[i].arrive_time,arr[i].service_time);}
+	}
+	printf("\n");}
+
+/*********************************************** STRIDE Workload Table **********************************************/
+
+void stride_workload_table(int size, process arr[]){
+
+	printf("\n");
+	printf("===============Workload============\n");
+	printf("  passvalue | service time | stride\n");
+	printf("-----------------------------------\n");
+	for (int i = 0; i < size; i++) {
+		printf("%c",65+i);
+		printf("	 %d  |       %d      |  %d        \n",arr[i].arrive_time,arr[i].service_time,arr[i].priority);
+	}
+	printf("\n");
+
+}
+
 /************************************************ FIFO Implementation  **********************************************/
 
 void fifo(process arr[], Queue* pq, int total_time, int size) {//main함수에서 할당한 각 프로세스의 워크로드를 구조체 배열로, 프로세스 갯수, 총 시간, 큐를 인자로 둠.
@@ -683,7 +716,8 @@ void stride(process arr[], Queue* pq,int time, int size) {//각 프로세스의 
 	}
 	graph(sort, size, total_service_time);// 전체 시간을 위에서 계산 후 stride 스케줄링 결과를 출력할 함수 호출.
 }
-					
+
+/*************************************** Bubble Sort Implementation ***************************************/
 
 void bubble_sort(process arr[], int size)    // 매개변수로 정렬할 배열과 요소의 개수를 받음
 {
@@ -715,7 +749,27 @@ void bubble_sort(process arr[], int size)    // 매개변수로 정렬할 배열
 				arr[j + 1].name = process_name;
        // 다음 요소로 보냄
 			}
-			
+			else if(arr[j].arrive_time == arr[j+1].arrive_time){
+				if(arr[j].name > arr[j+1].name)
+				{
+				passvalue = arr[j].arrive_time;
+				stride= arr[j].priority;
+				servicetime = arr[j].service_time;
+				process_name = arr[j].name;
+
+
+				arr[j].arrive_time = arr[j + 1].arrive_time;
+				arr[j].priority = arr[j + 1].priority;
+				arr[j].service_time = arr[j + 1].service_time;
+				arr[j].name = arr[j+1].name;
+
+				arr[j + 1].arrive_time = passvalue;
+				arr[j + 1].priority = stride;
+				arr[j + 1].service_time = servicetime;
+				arr[j + 1].name = process_name;
+				
+				}
+			}		
 		}
 	}
 }
