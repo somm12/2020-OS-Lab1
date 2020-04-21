@@ -565,32 +565,23 @@ void mlfq_4(process arr[], int time, int size) {
 			if (running[0].service_time == 0 || time_slice == 4)
 			{
 				time_slice = 0;
-                if (QIsEmpty(&P1) == 0){ 
-                    Dequeue(&P1);
-                }
-                else if (QIsEmpty(&P2) == 0){ 
-                    Dequeue(&P2);
-                }
-                else if (QIsEmpty(&P3) == 0){ 
-                    Dequeue(&P3);
-                }
-                else if (QIsEmpty(&P4) == 0){ 
-                    Dequeue(&P4);
-                }
-
 			}
 			if (time_slice == 0){
 				if (QIsEmpty(&P1) == 0){
 					running[0] = QPeek(&P1);
+					Dequeue(&P1);
 				}
 				else if (QIsEmpty(&P2) == 0){
 					running[0] = QPeek(&P2);
+					Dequeue(&P2);
 				}
 				else if (QIsEmpty(&P3) == 0){
 					running[0] = QPeek(&P3);
+					Dequeue(&P3);
 				}
 				else if (QIsEmpty(&P4) == 0){
 					running[0] = QPeek(&P4);
+					Dequeue(&P4);
 				}
 			}
 			Enqueue(&output, running[0]);	// running 에 넣어준 프로세스를 output 으로 Enqueue

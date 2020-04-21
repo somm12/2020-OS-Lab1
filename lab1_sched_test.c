@@ -56,9 +56,9 @@ int main(int argc, char *argv[]){
 	printf("[ FIFO ]\n");
 	fifo(arr1, &pq, total_time1, process_num1);
 	printf("[  RR  ]\n");
-	rr(arr1, &pq, total_time1, process_num1);
+	rr_4(arr1, &pq, total_time1, process_num1);
 	printf("[ MLFQ ]\n");
-	mlfq(arr1, total_time1, process_num1);
+	mlfq_4(arr1, total_time1, process_num1);
 
 /*
 	process arr2[7] = {{0,3,'A'},{3,2,'B' },{4,4,'C'},{8,4,'D'},{10,5,'E'},{5,3,'F'},{12,4,'G'}};

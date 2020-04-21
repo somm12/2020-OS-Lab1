@@ -64,6 +64,8 @@ void rr(process arr[], Queue * pq, int total_time, int process_num);
 void mlfq(process arr[], int total_time, int process_num);
 void stride(process arr[], Queue* pq,int time, int size);
 void bubble_sort(process arr[], int size);
+void rr_4(process arr[], Queue * pq, int total_time, int process_num);
+void mlfq_4(process arr[], int total_time, int process_num);
 
 void fifo_workload_table(int size, process arr[]);
 
