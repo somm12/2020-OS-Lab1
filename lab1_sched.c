@@ -593,7 +593,29 @@ void bubble_sort(process arr[], int size)    // 매개변수로 정렬할 배열
 				arr[j + 1].process_name = process_name;
        // 다음 요소로 보냄
 			}
+			else if(arr[j].arrive_time == arr[j+1].arrive_time){
+				if(arr[j].process_name > arr[j+1].process_name)
+				{
+					passvalue = arr[j].arrive_time;
+				stride= arr[j].priority;
+				servicetime = arr[j].service_time;
+				process_name = arr[j].process_name;
+
+
+				arr[j].arrive_time = arr[j + 1].arrive_time;
+				arr[j].priority = arr[j + 1].priority;
+				arr[j].service_time = arr[j + 1].service_time;
+				arr[j].process_name = arr[j+1].process_name;
+
+				arr[j + 1].arrive_time = passvalue;
+				arr[j + 1].priority = stride;
+				arr[j + 1].service_time = servicetime;
+				arr[j + 1].process_name = process_name;
+				
+				}
+			}
 			
 		}
 	}
+
 }
