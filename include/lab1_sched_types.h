@@ -56,10 +56,11 @@ Data QPeek(Queue * pq);
 void fifo_workload_table(int size, process arr[]);
 void fifo(process arr[], Queue * pq, int total_time, int size);
 void rr(process arr[], Queue *pq, int time, int size);
+void rr_4(process arr[], Queue* pq, int time, int size);
 void fifograph(process arr[], int size, int total_service_time);
 void graph(process arr[], int size, int time);
 void mlfq(process arr[], int time, int size);
-int  getLCM(int numArr[]);
+void stride_workload_table(int size, process arr[]);
 void stride(process arr[],Queue *pq, int time, int size);
 void bubble_sort(process arr[], int size);
 #endif /* LAB1_HEADER_H*/
