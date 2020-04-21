@@ -57,13 +57,13 @@ int main(void){
     rr_4(arr1, &pq, total_time1, process_num1);
 	printf("\n");
     printf("============================ MLFQ =============================\n");
-    mlfq(arr1, total_time1, process_num1);
+    mlfq_4(arr1, total_time1, process_num1);
 	printf("\n");
 
 
 
-
-	process arr4[5] = {{0,5,'A',100},{0,3,'B',200},{0,6,'C',40},{0,2,'D',50},{0,4,'E',80}};
+	 process arr4[7] = {{0,4,'A',100},{0,2,'B',150},{0,3,'C',40},{0,2,'D',50},{0,4,'E',70},{0,3,'F',20},{0,2,'G',200}};
+	//process arr4[5] = {{0,5,'A',100},{0,3,'B',200},{0,6,'C',40},{0,2,'D',50},{0,4,'E',80}};
 	total_time1 = 0;
 	size = sizeof(arr4)/sizeof(process);
 	for(int i = 0; i < size; i++){
